@@ -16,7 +16,7 @@ public class Patient {
 	
 	private String nhsNumber;
 	private PersonName name;
-	private Address address;
+	private ArrayList<Address> address;
 	private HL7Date dateOfBirth;
 	private HL7Date dateOfDeath;
 	private String gender;
@@ -35,12 +35,7 @@ public class Patient {
 	public void setName(PersonName name) {
 		this.name = name;
 	}
-	public Address getAddress() {
-		return address;
-	}
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+	
 	public HL7Date getDateOfBirth() {
 		return dateOfBirth;
 	}
@@ -77,7 +72,19 @@ public class Patient {
 	public void setPracticeCode(String practiceCode) {
 		this.practiceCode = practiceCode;
 	}
-	
+	public ArrayList<Address> getAddress() {
+		return address;
+	}
+	public void setAddress(ArrayList<Address> address) {
+		this.address = address;
+	}
+	public void addAddress(Address address) {
+		if (this.address == null) {
+			this.address = new ArrayList<Address>();
+		}
+		this.address.add(address);
+	}
+
 	
 	/*name.addGivenSimple("Adam");
 	name.addFamilySimple("Hatherly");

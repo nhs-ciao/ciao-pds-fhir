@@ -67,6 +67,11 @@ public class PatientRoutes extends RouteBuilder {
     	// Send to Spine
     	from("direct:spineSender").routeId("fhir-patient-spineSender")
     		// Actual URL is set in a request header prior to the below being called
-    		.to("jetty:http://dummyurl?throwExceptionOnFailure=false");
+    		.to("jetty:http://dummyurl?throwExceptionOnFailure=false")
+    		.to("direct:responseBuilder");
+    	
+    	// Parse the respone
+    	from("direct:responseBuilder")
+    		.beanRef("patientResultProcessor");
     }
 }

@@ -15,7 +15,7 @@ import uk.nhs.interoperability.payloads.vocabularies.internal.TelecomUseType;
 import uk.nhs.itk.ciao.model.Patient;
 
 public class HL7ResponseParser {
-	Patient parseSpineResponse(String response) {
+	public static Patient parseSpineResponse(String response) {
 		Patient patient = new Patient();
 		// Parse the response using itk-payloads
 		SpineSOAPResponse template = new SpineSOAPResponse();
@@ -55,10 +55,10 @@ public class HL7ResponseParser {
 							if (use.equals(AddressType.Home.code)) {
 								if (address.getUseablePeriod() == null) {
 									// No useable period, so assume current
-									patient.setAddress(address);
+									patient.addAddress(address);
 								} else {
 									if (HelperUtils.isCurrent(address.getUseablePeriod(), null)) {
-										patient.setAddress(address);
+										patient.addAddress(address);
 									}
 								}
 							}
