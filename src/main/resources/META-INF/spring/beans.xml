@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ctx="http://www.springframework.org/schema/context"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/osgi-compendium http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium.xsd">
+
+  <!-- Configure our JMS provider - in this case ActiveMQ. In a 
+       production environment you will want to change this from
+       the default username and password to something else. The
+       login and password for activemq in servicemix can be found
+       in {servicmixpath}/etc/users.properties
+  -->
+  <bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />        
+		<property name="userName" value="smx" />
+		<property name="password" value="smx" />
+      </bean>
+    </property>
+  </bean>
+
+  <!-- This will add our java beans to the camel registry so they can be
+       accessed from our routes -->
+  <bean id="patientGetProcessor" class="uk.nhs.itk.ciao.fhir.PatientGetProcessor"/>
+  <bean id="patientPostProcessor" class="uk.nhs.itk.ciao.fhir.PatientPostProcessor"/>
+
+  <camel:camelContext id="ciao-fhir" xmlns="http://camel.apache.org/schema/spring">
+    <!-- Tell Camel where our Java DSL routes can be found. It will look
+         for any classes in this package that extend the RouteBuilder class
+    -->
+    <package>uk.nhs.itk.ciao.fhir</package>
+  </camel:camelContext>
+
+</beans>
