@@ -50,7 +50,7 @@ public class PatientResource {
 			String genderCode = V3FHIRTypeMappers.getFHIRGender(spinePatient.getGender());
 			if (genderCode != null) {
 				CodeableConcept gender = new CodeableConcept();
-				gender.setTextSimple(spinePatient.getGender());
+				gender.setTextSimple(spinePatient.getGender().displayName);
 				Coding coding = gender.addCoding();
 				coding.setSystemSimple("http://hl7.org/fhir/vs/administrative-gender");
 				coding.setCodeSimple(genderCode);

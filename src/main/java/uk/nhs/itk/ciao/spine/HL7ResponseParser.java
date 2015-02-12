@@ -9,6 +9,7 @@ import uk.nhs.interoperability.payloads.spine.PDSPatientID;
 import uk.nhs.interoperability.payloads.spine.SpineResponseBody;
 import uk.nhs.interoperability.payloads.spine.SpineSOAPResponse;
 import uk.nhs.interoperability.payloads.spine.SpineSOAPSimpleTraceResponseBody;
+import uk.nhs.interoperability.payloads.vocabularies.generated.Sex;
 import uk.nhs.interoperability.payloads.vocabularies.internal.AddressType;
 import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
 import uk.nhs.interoperability.payloads.vocabularies.internal.TelecomUseType;
@@ -77,7 +78,7 @@ public class HL7ResponseParser {
 				patient.setDateOfDeath(responseBody.getDeceasedTime());
 				
 				// Gender
-				patient.setGender(responseBody.getAdministrativeGender());
+				patient.setGender(responseBody.getAdministrativeGenderEnum());
 				
 				// Telecoms - only Home, Primary Home and Mobile numbers, and only Telephone and Email values.
 				// REQ-PDSMS-4.5.7

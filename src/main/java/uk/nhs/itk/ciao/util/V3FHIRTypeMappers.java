@@ -16,15 +16,30 @@ public class V3FHIRTypeMappers {
 	 * @param v3gender
 	 * @return FHIR gender code
 	 */
-	public static String getFHIRGender(String v3gender) {
-		String genderCode = null;
-		// Match gender based on display name
-		for (Sex val : Sex.values()) {
-			if (val.displayName.equals(v3gender)) {
-				genderCode = val.code;
-			}
+	public static String getFHIRGender(Sex v3gender) {
+		if (Sex._Male.sameAs(v3gender)) {
+			return "M";
+		} else if (Sex._Female.sameAs(v3gender)) {
+			return "F";
 		}
-		return genderCode;
+		return null;
+	}
+	
+	/**
+	 * Map from a FHIR gender value to a HL7v3 gender code
+	 * @param fhirGender
+	 * @return HL7v3 gender code
+	 */
+	public static Sex getV3Gender(String fhirGender) {
+		if (fhirGender == null) {
+			return null;
+		} else if (fhirGender.equals("M")) {
+			return Sex._Male;
+		} else if (fhirGender.equals("F")) {
+			return Sex._Female;
+		} else {
+			return null;
+		}
 	}
 	
 	/**

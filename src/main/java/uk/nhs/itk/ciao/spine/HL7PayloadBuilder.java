@@ -31,30 +31,32 @@ public class HL7PayloadBuilder {
 	
 	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth) {
 		
-		String messageUUID = CDAUUID.generateUUIDString();
 		String ciaoASID = PropertyReader.getProperty("ASID");
+		String pdsASID = PropertyReader.getProperty("PDSASID");
+		String pdsURL = PropertyReader.getProperty("PDSURL");
+		String fromAddress = PropertyReader.getProperty("SOAPFromAddress");
 		System.out.println(ciaoASID);
 		
 		SpineSOAP template = new SpineSOAP();
 
-		template.setMessageID("uuid:"+messageUUID);
+		template.setMessageID("uuid:"+CDAUUID.generateUUIDString());
 		template.setAction("urn:nhs:names:services:pdsquery/QUPA_IN000005UK01");
-		template.setTo("https://pds-sync.nis1.national.ncrs.nhs.uk/syncservice-pds/pds");
-		template.setFrom("FROMADDRESS");
-		template.setReceiverASID("PDSASID");
+		template.setTo(pdsURL);
+		template.setFrom(fromAddress);
+		template.setReceiverASID(pdsASID);
 		template.setSenderASID(ciaoASID);
-		template.setReplyAddress("FROMADDRESS");
+		template.setReplyAddress(fromAddress);
 		
 		SpineSOAPSimpleTraceBody body = new SpineSOAPSimpleTraceBody();
 		// Transmission Wrapper Fields (Send Message Payload)
-		body.setTransmissionID(messageUUID);
-		//body.setTransmissionID(CDAUUID.generateUUIDString());
+		//body.setTransmissionID(messageUUID);
+		body.setTransmissionID(CDAUUID.generateUUIDString());
 		body.setTransmissionCreationTime(new DateValue("20150118100231"));
 		body.setTransmissionHL7VersionCode(HL7StandardVersionCode._V3NPfIT30);
 		body.setTransmissionInteractionID("QUPA_IN000005UK01");
 		body.setTransmissionProcessingCode(ProcessingID._Production);
 		body.setTransmissionProcessingModeCode(ProcessingMode._Currentprocessing);
-		body.setTransmissionReceiverASID("PDSASID");
+		body.setTransmissionReceiverASID(pdsASID);
 		body.setTransmissionSenderASID(ciaoASID);
 		
 		// Control Act Wrapper Fields

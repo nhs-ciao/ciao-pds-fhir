@@ -6,6 +6,7 @@ import uk.nhs.interoperability.payloads.HL7Date;
 import uk.nhs.interoperability.payloads.commontypes.Address;
 import uk.nhs.interoperability.payloads.commontypes.PersonName;
 import uk.nhs.interoperability.payloads.commontypes.Telecom;
+import uk.nhs.interoperability.payloads.vocabularies.generated.Sex;
 
 /**
  * This is a general patient object, agnostic of any particular system or standard - this can
@@ -19,7 +20,7 @@ public class Patient {
 	private ArrayList<Address> address;
 	private HL7Date dateOfBirth;
 	private HL7Date dateOfDeath;
-	private String gender;
+	private Sex gender;
 	private ArrayList<Telecom> telecom;
 	private String practiceCode;
 	
@@ -47,12 +48,6 @@ public class Patient {
 	}
 	public void setDateOfDeath(HL7Date dateOfDeath) {
 		this.dateOfDeath = dateOfDeath;
-	}
-	public String getGender() {
-		return gender;
-	}
-	public void setGender(String gender) {
-		this.gender = gender;
 	}
 	public ArrayList<Telecom> getTelecom() {
 		return telecom;
@@ -83,6 +78,12 @@ public class Patient {
 			this.address = new ArrayList<Address>();
 		}
 		this.address.add(address);
+	}
+	public Sex getGender() {
+		return gender;
+	}
+	public void setGender(Sex gender) {
+		this.gender = gender;
 	}
 
 	
