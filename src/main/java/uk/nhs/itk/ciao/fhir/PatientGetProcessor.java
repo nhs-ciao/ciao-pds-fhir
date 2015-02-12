@@ -37,9 +37,23 @@ public class PatientGetProcessor implements Processor {
 		// GET [base]/Patient?gender:text=male
 		
 		Message in = exchange.getIn();
-		String surname = in.getHeader("family").toString();
 		
-		String requestPayload = HL7PayloadBuilder.buildSimpleTrace(surname);
+		String surname = null;
+		if (in.getHeader("family") != null) {
+			surname = in.getHeader("family").toString();
+		}
+		
+		String gender = null;
+		if (in.getHeader("gender") != null) {
+			gender = in.getHeader("gender").toString();
+		}
+		
+		String dateOfBirth = null;
+		if (in.getHeader("birthdate") != null) {
+			dateOfBirth = in.getHeader("birthdate").toString();
+		}
+		
+		String requestPayload = HL7PayloadBuilder.buildSimpleTrace(surname, gender, dateOfBirth);
 		
 		Message out = exchange.getOut();
 		out.setBody(requestPayload);

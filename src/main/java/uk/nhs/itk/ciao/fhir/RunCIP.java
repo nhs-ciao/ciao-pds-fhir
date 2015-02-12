@@ -11,7 +11,7 @@ import org.apache.camel.util.jndi.JndiContext;
  * To test the CIP pointing at TKW use one of the following:
  * 
  * Simple trace, single match:
- * curl http://localhost:8080/fhir/Patient?family=SMITH
+ * curl http://localhost:8080/fhir/Patient?family=PURVES
  * curl http://localhost:8080/fhir/Patient?family=LEWINGTON
  * curl http://localhost:8080/fhir/Patient?family=STAMBUKDELIFSCHITZ
  * ??? curl http://localhost:8080/fhir/Patient?family=History

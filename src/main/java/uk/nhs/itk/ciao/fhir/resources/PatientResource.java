@@ -18,7 +18,7 @@ import uk.nhs.interoperability.payloads.commontypes.Address;
 import uk.nhs.interoperability.payloads.commontypes.PersonName;
 import uk.nhs.interoperability.payloads.commontypes.Telecom;
 import uk.nhs.interoperability.payloads.helpers.HumanReadableFormatter;
-import uk.nhs.itk.ciao.fhir.util.V3FHIRTypeMappers;
+import uk.nhs.itk.ciao.util.V3FHIRTypeMappers;
 
 public class PatientResource {
 	

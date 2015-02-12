@@ -2,16 +2,14 @@ package uk.nhs.itk.ciao.spine;
 
 import uk.nhs.interoperability.payloads.DateValue;
 import uk.nhs.interoperability.payloads.commontypes.SMSPPersonName;
-import uk.nhs.interoperability.payloads.spine.PdsTraceQuery;
 import uk.nhs.interoperability.payloads.spine.SpineSOAP;
 import uk.nhs.interoperability.payloads.spine.SpineSOAPSimpleTraceBody;
 import uk.nhs.interoperability.payloads.util.CDAUUID;
 import uk.nhs.interoperability.payloads.vocabularies.generated.HL7StandardVersionCode;
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingID;
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingMode;
-import uk.nhs.interoperability.payloads.vocabularies.generated.Sex;
-import uk.nhs.interoperability.payloads.vocabularies.internal.AddressType;
 import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
+import uk.nhs.itk.ciao.util.PropertyReader;
 
 public class HL7PayloadBuilder {
 	
@@ -31,9 +29,11 @@ public class HL7PayloadBuilder {
 		return true;
 	}
 	
-	public static String buildSimpleTrace(String surname) {
+	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth) {
 		
 		String messageUUID = CDAUUID.generateUUIDString();
+		String ciaoASID = PropertyReader.getProperty("ASID");
+		System.out.println(ciaoASID);
 		
 		SpineSOAP template = new SpineSOAP();
 
@@ -41,8 +41,8 @@ public class HL7PayloadBuilder {
 		template.setAction("urn:nhs:names:services:pdsquery/QUPA_IN000005UK01");
 		template.setTo("https://pds-sync.nis1.national.ncrs.nhs.uk/syncservice-pds/pds");
 		template.setFrom("FROMADDRESS");
-		template.setReceiverASID("RECEIVERASID");
-		template.setSenderASID("SENDERASID");
+		template.setReceiverASID("PDSASID");
+		template.setSenderASID(ciaoASID);
 		template.setReplyAddress("FROMADDRESS");
 		
 		SpineSOAPSimpleTraceBody body = new SpineSOAPSimpleTraceBody();
@@ -54,15 +54,22 @@ public class HL7PayloadBuilder {
 		body.setTransmissionInteractionID("QUPA_IN000005UK01");
 		body.setTransmissionProcessingCode(ProcessingID._Production);
 		body.setTransmissionProcessingModeCode(ProcessingMode._Currentprocessing);
-		body.setTransmissionReceiverASID("RECEIVERASID");
-		body.setTransmissionSenderASID("SENDERASID");
+		body.setTransmissionReceiverASID("PDSASID");
+		body.setTransmissionSenderASID(ciaoASID);
 		
 		// Control Act Wrapper Fields
-		body.setControlActSenderASID("SENDERASID");
+		body.setControlActSenderASID(ciaoASID);
 		
 		// Actual Query Payload
-		body.setGender(Sex._Female.code);
-		body.setDateOfBirth(new DateValue("19661111"));
+		//body.setGender(Sex._Female.code);
+		if (gender != null) {
+			body.setGender(gender);
+		}
+		
+		//body.setDateOfBirth(new DateValue("19661111"));
+		if (dateOfBirth != null) {
+			body.setDateOfBirth(new DateValue(dateOfBirth));
+		}
 		
 		// Add provided parameters for query
 		if (surname != null) {

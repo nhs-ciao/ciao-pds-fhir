@@ -19,8 +19,12 @@ Specific functionality for this proof-of-concept CIP:
 * Send the request to a running instance of the Spine TKW simulator **complete**
 * Send the request to a Spine test region over a TLS MA link **not started**
 * Parse the response **partially complete**
-* Populate a FHIR patient resource and return it to the requestor **in progress**
+* Populate a FHIR patient resource and return it to the requestor **complete**
+* Use FHIR bundle for returning results **not started**
+* FHIR conformance reporting **not started**
+* JSON Support **not started**
 * Error handling **not started**
+* Migrate to FHIR DSTU2 (currently DSTU1) **not started**
 
 Requirement Traceability
 ------------------------
