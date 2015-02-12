@@ -2,13 +2,13 @@ package uk.nhs.itk.ciao.fhir.resources;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.Date;
 
 import org.hl7.fhir.instance.formats.XmlComposer;
 import org.hl7.fhir.instance.model.Address.AddressUse;
 import org.hl7.fhir.instance.model.BooleanType;
 import org.hl7.fhir.instance.model.CodeableConcept;
 import org.hl7.fhir.instance.model.Coding;
+import org.hl7.fhir.instance.model.Contact;
 import org.hl7.fhir.instance.model.DateAndTime;
 import org.hl7.fhir.instance.model.HumanName;
 import org.hl7.fhir.instance.model.Identifier;
@@ -18,7 +18,7 @@ import uk.nhs.interoperability.payloads.commontypes.Address;
 import uk.nhs.interoperability.payloads.commontypes.PersonName;
 import uk.nhs.interoperability.payloads.commontypes.Telecom;
 import uk.nhs.interoperability.payloads.helpers.HumanReadableFormatter;
-import uk.nhs.interoperability.payloads.vocabularies.generated.Sex;
+import uk.nhs.itk.ciao.fhir.util.V3FHIRTypeMappers;
 
 public class PatientResource {
 	
@@ -47,13 +47,7 @@ public class PatientResource {
 		
 		// Gender
 		if (spinePatient.getGender() != null) {
-			String genderCode = null;
-			// Match gender based on display name
-			for (Sex val : Sex.values()) {
-				if (val.displayName.equals(spinePatient.getGender())) {
-					genderCode = val.code;
-				}
-			}
+			String genderCode = V3FHIRTypeMappers.getFHIRGender(spinePatient.getGender());
 			if (genderCode != null) {
 				CodeableConcept gender = new CodeableConcept();
 				gender.setTextSimple(spinePatient.getGender());
@@ -77,7 +71,9 @@ public class PatientResource {
 		}
 		
 		// DateOfBirth
-		patientResource.setBirthDateSimple(new DateAndTime(spinePatient.getDateOfBirth().getDate()));
+		if (spinePatient.getDateOfBirth() != null) {
+			patientResource.setBirthDateSimple(new DateAndTime(spinePatient.getDateOfBirth().getDate()));
+		}
 		
 		// DateOfDeath
 		BooleanType bool = new BooleanType();
@@ -92,7 +88,8 @@ public class PatientResource {
 		// Telecom
 		if (spinePatient.getTelecom() != null) {
 			for (Telecom spineTelecom : spinePatient.getTelecom()) {
-				
+				Contact contact = patientResource.addTelecom();
+				V3FHIRTypeMappers.getFHIRTelecom(contact, spineTelecom);
 			}
 		}
 		// PracticeCode

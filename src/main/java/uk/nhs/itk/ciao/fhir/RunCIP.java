@@ -63,7 +63,7 @@ public class RunCIP {
 		JndiContext jndi = new JndiContext();
 		jndi.bind("patientGetProcessor", new PatientGetProcessor());
 		jndi.bind("patientPostProcessor", new PatientPostProcessor());
-		jndi.bind("patientResultProcessor", new PatientResponseProcessor());
+		jndi.bind("patientResponseProcessor", new PatientResponseProcessor());
 		CamelContext context = new DefaultCamelContext(jndi);
 		//CamelContext context = super.createCamelContext();
 		

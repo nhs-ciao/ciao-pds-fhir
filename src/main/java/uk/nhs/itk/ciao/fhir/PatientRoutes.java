@@ -70,8 +70,8 @@ public class PatientRoutes extends RouteBuilder {
     		.to("jetty:http://dummyurl?throwExceptionOnFailure=false")
     		.to("direct:responseBuilder");
     	
-    	// Parse the respone
+    	// Parse the response
     	from("direct:responseBuilder")
-    		.beanRef("patientResultProcessor");
+    		.beanRef("patientResponseProcessor");
     }
 }
