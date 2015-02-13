@@ -7,6 +7,28 @@ The objective of the CIP is to provide a minimal implementation of a ReST-based 
 
 The scope of this trial CIP is limited to a PDS simple trace interaction, so it will not support all aspects of the FHIR standard, nor will it provide all functionality available in PDS (in fact is is a subset of the functionality outlined in the PDS mini services specification).
 
+Building and Running
+--------------------
+
+To pull down the code, run:
+
+	git clone https://github.com/nhs-ciao/ciao-pds-fhir.git
+	
+You can then compile and generate a JAR file:
+
+	mvn package
+
+This will generate two jar files, one which is just the CIP code, and which could be deployed into an OSGi container, and a second (with an -executable suffix) which includes all dependencies and can be run as a standalone jar - for example:
+
+	java -jar target/ciao-pds-fhir-0.0.1-SNAPSHOT-executable.jar
+
+In order for the CIP to work, currently you will need to have a copy of the Spine TKW simulator running on the local machine. You can get this running using an install script available in the ciao-utils repository:
+
+	wget https://raw.githubusercontent.com/nhs-ciao/ciao-utils/master/contrib/tkw/getTKW.sh
+	chmod +x getTKW.sh
+	sudo ./getTKW.sh Spine /opt/SpineTKW CIAOTest
+	java -jar /opt/SpineTKW/TKW.jar -simulator /opt/SpineTKW/config/SPINE_MTH_20111121/tkw.properties
+
 Scope / Progress
 ----------------
 
@@ -25,8 +47,9 @@ Specific functionality for this proof-of-concept CIP:
 * JSON Support **complete**
 * Error handling **not started**
 * Add Unit Tests **not started**
-* Add JMX hooks
-* Add proper configuration management
+* Add JMX hooks **not started**
+* Add proper configuration management **not started**
+* Test in an OSGi container (Service Mix) **not started**
 
 Potential additional enhancements:
 
