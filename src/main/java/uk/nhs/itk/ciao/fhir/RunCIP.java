@@ -46,13 +46,6 @@ public class RunCIP {
 			context.start();
 			System.out.println("CAMEL STARTED");
 			
-			// And do a test
-			/*Thread.sleep(500);
-			System.out.println("Calling route.");
-			ProducerTemplate template = context.createProducerTemplate();
-			String response = template.requestBody("direct:pretendRequest", "", String.class);
-			System.out.println("Result: " + response);*/
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,7 +62,7 @@ public class RunCIP {
 		//CamelContext context = super.createCamelContext();
 		
 		// Now, configure our jms component to use seda, which is a simple in-memory queue. In the live
-		// component, this is configured to use activemq in beans.xml
+		// component, this would be configured to use activemq
 		context.addComponent("jms", context.getComponent("seda"));
 		return context;
 	}

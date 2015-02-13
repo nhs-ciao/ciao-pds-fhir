@@ -18,12 +18,18 @@ Specific functionality for this proof-of-concept CIP:
 * Parse the request and build a Spine simple trace message **complete**
 * Send the request to a running instance of the Spine TKW simulator **complete**
 * Send the request to a Spine test region over a TLS MA link **not started**
-* Parse the response **partially complete**
+* Parse the response **complete**
 * Populate a FHIR patient resource and return it to the requestor **complete**
 * Use FHIR bundle for returning results **not started**
-* FHIR conformance reporting **not started**
-* JSON Support **not started**
+* FHIR conformance reporting **complete**
+* JSON Support **complete**
 * Error handling **not started**
+* Add Unit Tests **not started**
+* Add JMX hooks
+* Add proper configuration management
+
+Potential additional enhancements:
+
 * Migrate to FHIR DSTU2 (currently DSTU1) **not started**
 
 Requirement Traceability

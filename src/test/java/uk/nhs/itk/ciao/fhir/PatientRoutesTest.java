@@ -19,7 +19,7 @@ public class PatientRoutesTest extends CamelTestSupport {
 	 * For the unit test, this will substitute an in-memory queue for a real
 	 * JMS queue so we don't have to have ApacheMQ running to run the test
 	 */
-	@Override
+	/*@Override
 	protected CamelContext createCamelContext() throws Exception {
 		
 		// Register our custom beans using JNDI (in the live component this is configured in beans.xml)
@@ -33,12 +33,12 @@ public class PatientRoutesTest extends CamelTestSupport {
 		// component, this is configured to use activemq in beans.xml
 		context.addComponent("jms", context.getComponent("seda"));
 		return context;
-	}
+	}*/
 	
 	/**
 	 * Initialise the route we want to test
 	 */
-	@Override
+	/*@Override
 	protected RouteBuilder createRouteBuilder() throws Exception {
 		RouteBuilder routesToTest = new CIPRoutes();
 		return routesToTest;
@@ -64,4 +64,5 @@ public class PatientRoutesTest extends CamelTestSupport {
 		boolean matches = notify.matches(5, TimeUnit.SECONDS);
 		assertTrue(matches);
 	}
+	*/
 }
