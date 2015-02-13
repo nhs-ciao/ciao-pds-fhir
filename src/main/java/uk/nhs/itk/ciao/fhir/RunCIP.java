@@ -42,7 +42,7 @@ public class RunCIP {
 			context.setStreamCaching(true);
 			context.setTracing(true);
 			context.getProperties().put(Exchange.LOG_DEBUG_BODY_STREAMS, "true");
-			context.addRoutes(new PatientRoutes());
+			context.addRoutes(new CIPRoutes());
 			context.start();
 			System.out.println("CAMEL STARTED");
 			
@@ -64,6 +64,7 @@ public class RunCIP {
 		jndi.bind("patientGetProcessor", new PatientGetProcessor());
 		jndi.bind("patientPostProcessor", new PatientPostProcessor());
 		jndi.bind("patientResponseProcessor", new PatientResponseProcessor());
+		jndi.bind("conformanceProcessor", new ConformanceProcessor());
 		CamelContext context = new DefaultCamelContext(jndi);
 		//CamelContext context = super.createCamelContext();
 		

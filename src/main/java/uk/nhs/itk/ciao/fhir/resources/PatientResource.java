@@ -3,6 +3,7 @@ package uk.nhs.itk.ciao.fhir.resources;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
+import org.hl7.fhir.instance.client.ResourceFormat;
 import org.hl7.fhir.instance.formats.XmlComposer;
 import org.hl7.fhir.instance.model.Address.AddressUse;
 import org.hl7.fhir.instance.model.BooleanType;
@@ -22,7 +23,7 @@ import uk.nhs.itk.ciao.util.V3FHIRTypeMappers;
 
 public class PatientResource {
 	
-	public static String buildPatientResource(uk.nhs.itk.ciao.model.Patient spinePatient) throws Exception {
+	public static String buildPatientResource(uk.nhs.itk.ciao.model.Patient spinePatient, ResourceFormat format) {
 		Patient patientResource = new Patient();
 		
 		// Name
@@ -94,11 +95,7 @@ public class PatientResource {
 		}
 		// PracticeCode
 		
-		XmlComposer composer = new XmlComposer();
-		OutputStream out = new ByteArrayOutputStream();
-		composer.compose(out, patientResource, true);
-		
-		return out.toString();
+		return ResourceSerialiser.serialise(patientResource, format);
 		
 		/*
 		If we were using DSTU2 the code would be different - e.g.:

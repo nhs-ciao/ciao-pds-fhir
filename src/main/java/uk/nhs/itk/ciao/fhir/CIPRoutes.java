@@ -45,7 +45,7 @@ import org.apache.camel.builder.RouteBuilder;
  * Get tags		-> GET [base]/_tags
  * 
  */
-public class PatientRoutes extends RouteBuilder {
+public class CIPRoutes extends RouteBuilder {
 
     public void configure() {
     	
@@ -73,5 +73,17 @@ public class PatientRoutes extends RouteBuilder {
     	// Parse the response
     	from("direct:responseBuilder")
     		.beanRef("patientResponseProcessor");
+    	
+    	// Conformance Profile
+    	from("jetty:http://0.0.0.0:8080/fhir/metadata?traceEnabled=true").routeId("fhir-conformance")
+    		.to("direct:conformance");
+    	
+    	from("jetty:http://0.0.0.0:8080/fhir?traceEnabled=true").routeId("fhir-conformance-options")
+			.choice()
+            	.when(header(Exchange.HTTP_METHOD).isEqualTo("OPTIONS"))
+			    	.to("direct:conformance");
+    	
+    	from("direct:conformance")
+			.beanRef("conformanceProcessor");
     }
 }

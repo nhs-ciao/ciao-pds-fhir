@@ -40,7 +40,7 @@ public class PatientRoutesTest extends CamelTestSupport {
 	 */
 	@Override
 	protected RouteBuilder createRouteBuilder() throws Exception {
-		RouteBuilder routesToTest = new PatientRoutes();
+		RouteBuilder routesToTest = new CIPRoutes();
 		return routesToTest;
 	}
 	

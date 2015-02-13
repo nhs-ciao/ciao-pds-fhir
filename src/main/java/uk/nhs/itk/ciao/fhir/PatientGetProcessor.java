@@ -57,6 +57,9 @@ public class PatientGetProcessor implements Processor {
 		
 		Message out = exchange.getOut();
 		out.setBody(requestPayload);
+		// Propagate format from the original request
+		out.setHeader("_format", in.getHeader("_format"));
+		// Add some additional headers for the Spine call
 		out.setHeader("SOAPaction", "urn:nhs:names:services:pdsquery/QUPA_IN000005UK01");
 		out.setHeader(Exchange.HTTP_URI, "http://127.0.0.1:4001/syncservice-pds/pds");
 		
