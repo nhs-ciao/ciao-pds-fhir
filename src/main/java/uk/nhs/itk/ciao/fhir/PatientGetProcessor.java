@@ -9,6 +9,7 @@ import org.apache.camel.Processor;
 
 import uk.nhs.interoperability.payloads.util.FileLoader;
 import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
+import uk.nhs.itk.ciao.util.PropertyReader;
 
 /**
  * GET Interactions for FHIR resources defined in the FHIR ReST API:
@@ -36,6 +37,8 @@ public class PatientGetProcessor implements Processor {
 		
 		// GET [base]/Patient?gender:text=male
 		
+		String pdsURL = PropertyReader.getProperty("PDSURL");
+		
 		Message in = exchange.getIn();
 		
 		String surname = null;
@@ -61,7 +64,7 @@ public class PatientGetProcessor implements Processor {
 		out.setHeader("_format", in.getHeader("_format"));
 		// Add some additional headers for the Spine call
 		out.setHeader("SOAPaction", "urn:nhs:names:services:pdsquery/QUPA_IN000005UK01");
-		out.setHeader(Exchange.HTTP_URI, "http://127.0.0.1:4001/syncservice-pds/pds");
+		out.setHeader(Exchange.HTTP_URI, pdsURL);
 		
 		//String testVal = FileLoader.loadFile(new File("/opt/SpineTKW/contrib/SPINE_Test_Messages/MTH_Test_Messages/PDS2008A_Example_Input_Msg/QUPA_IN000005UK01_MCCI_IN010000UK13_noheaders.xml"));
 		//out.setBody(testVal);
