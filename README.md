@@ -73,6 +73,6 @@ So, a comment mentioning REQ-PDSMS-4.5.2 would refer to the requirement(s) outli
 CIP Diagram
 -----------
 
-The below diagram shows the routes in this CIP (generated using the diagram generator from rmannibucau):
+The below diagram shows the routes in this CIP (generated using the diagram generator from [rmannibucau](https://github.com/rmannibucau/diagram-generator-parent)):
 
 ![CIP Route](./diagram/CIPRoutes.png)
