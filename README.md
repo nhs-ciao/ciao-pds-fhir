@@ -69,3 +69,10 @@ Some requirements from published specifications have been used to ensure this CI
 **NNN** = Requirement Number. Where a source does not number its requirements in this way, a document section number will be used instead.
 
 So, a comment mentioning REQ-PDSMS-4.5.2 would refer to the requirement(s) outlined in section 4.5.2 of the ITK Spine Mini Services - PDS Provider Requirements document.
+
+CIP Diagram
+-----------
+
+The below diagram shows the routes in this CIP (generated using the diagram generator from rmannibucau):
+
+![CIP Route](./diagram/CIPRoutes.png)
