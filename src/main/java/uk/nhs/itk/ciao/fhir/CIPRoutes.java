@@ -67,17 +67,18 @@ public class CIPRoutes extends RouteBuilder {
     	// Send to Spine
     	from("direct:spineSender").routeId("fhir-patient-spineSender")
     		// Actual URL is set in a request header prior to the below being called
-    		.to("jetty:http://dummyurl?throwExceptionOnFailure=false&sslContextParametersRef=spineSSLContextParameters")
+    	    .to("jetty:http://dummyurl?throwExceptionOnFailure=false")
+    	    //.to("jetty:http://dummyurl?throwExceptionOnFailure=false&sslContextParametersRef=spineSSLContextParameters")
     		.to("direct:responseProcessor");
     	
     	// Parse the response
     	from("direct:responseProcessor")
-    		.wireTap("jms:ciao-spineAudit")
+    		//.wireTap("jms:ciao-spineAudit")
     		.beanRef("patientResponseProcessor");
     	
     	// Log spine responses
-    	from("jms:ciao-spineAudit")
-    		.to("file:log/spine");
+    	//from("jms:ciao-spineAudit")
+    	//	.to("file:log/spine");
     	
     	// Conformance Profile
     	from("jetty:http://0.0.0.0:8080/fhir/metadata?traceEnabled=true").routeId("fhir-conformance")
