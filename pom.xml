@@ -132,35 +132,45 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.github.rmannibucau</groupId>
-				<artifactId>diagram-generator-maven-plugin</artifactId>
-				<version>0.0.1</version>
-				<executions>
-					<execution>
-						<id>pack</id>
-						<phase>package</phase>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<input>uk.nhs.itk.ciao.fhir.CIPRoutes</input>
-					<view>false</view> <!-- default = false, true to show a window containing the diagram -->
-					<width>1000</width> <!-- default = 640  -->
-					<height>800</height> <!-- default = 480 -->
-					<output>diagram</output> <!-- default = target/diagram -->
-					<type>camel</type> <!-- default = camel -->
-					<fileType>java</fileType> <!-- default = xml, other values = { java  }-->
-					<format>png</format> <!-- default = png, you can set jpg ... -->
-					<adjust>true</adjust> <!-- true allows to resize icons, false force to keep their original size; default: true -->
-					<additionalClasspathElements>
-						<additionalClasspathElement>target/classes</additionalClasspathElement>
-					</additionalClasspathElements>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>diagram</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.rmannibucau</groupId>
+						<artifactId>diagram-generator-maven-plugin</artifactId>
+						<version>0.0.1</version>
+						<executions>
+							<execution>
+								<id>pack</id>
+								<phase>package</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<input>uk.nhs.itk.ciao.fhir.CIPRoutes</input>
+							<view>false</view> <!-- default = false, true to show a window containing the diagram -->
+							<width>1000</width> <!-- default = 640  -->
+							<height>800</height> <!-- default = 480 -->
+							<output>diagram</output> <!-- default = target/diagram -->
+							<type>camel</type> <!-- default = camel -->
+							<fileType>java</fileType> <!-- default = xml, other values = { java  }-->
+							<format>png</format> <!-- default = png, you can set jpg ... -->
+							<adjust>true</adjust> <!-- true allows to resize icons, false force to keep their original size; default: true -->
+							<additionalClasspathElements>
+								<additionalClasspathElement>target/classes</additionalClasspathElement>
+							</additionalClasspathElements>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
