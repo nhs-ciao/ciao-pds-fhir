@@ -15,6 +15,11 @@
 	
 	<dependencies>
 		<dependency>
+		  <groupId>uk.nhs.interoperability</groupId>
+		  <artifactId>ciao-configuration</artifactId>
+		  <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.6</version>

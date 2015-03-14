@@ -1,15 +1,12 @@
 package uk.nhs.itk.ciao.fhir;
-import java.io.File;
-
-import org.apache.camel.Body;
 import org.apache.camel.Exchange;
-import org.apache.camel.Header;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import uk.nhs.interoperability.payloads.util.FileLoader;
+import uk.nhs.itk.ciao.configuration.CIAOConfig;
 import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
-import uk.nhs.itk.ciao.util.PropertyReader;
 
 /**
  * GET Interactions for FHIR resources defined in the FHIR ReST API:
@@ -24,6 +21,8 @@ import uk.nhs.itk.ciao.util.PropertyReader;
  *
  */
 public class PatientGetProcessor implements Processor {
+	private static Logger logger = LoggerFactory.getLogger(PatientGetProcessor.class);
+	
 	public void process(Exchange exchange) throws Exception {
 		
 		// Search examples from FHIR spec
@@ -36,8 +35,13 @@ public class PatientGetProcessor implements Processor {
 		// GET [base]/Patient?identifier=http://acme.org/patient|2345
 		
 		// GET [base]/Patient?gender:text=male
-		
-		String pdsURL = PropertyReader.getProperty("PDSURL");
+		CIAOConfig ciaoConfig = exchange.getContext().getRegistry().lookupByNameAndType("cipConfig", CIAOConfig.class);
+		if (ciaoConfig == null) {
+			logger.error("CIAO Config is NULL!");
+		} else {
+			logger.info("Config: ", ciaoConfig);
+		}
+		String pdsURL = ciaoConfig.getConfigValue("PDSURL");
 		
 		Message in = exchange.getIn();
 		
@@ -56,7 +60,7 @@ public class PatientGetProcessor implements Processor {
 			dateOfBirth = in.getHeader("birthdate").toString();
 		}
 		
-		String requestPayload = HL7PayloadBuilder.buildSimpleTrace(surname, gender, dateOfBirth);
+		String requestPayload = HL7PayloadBuilder.buildSimpleTrace(surname, gender, dateOfBirth, ciaoConfig);
 		
 		Message out = exchange.getOut();
 		out.setBody(requestPayload);

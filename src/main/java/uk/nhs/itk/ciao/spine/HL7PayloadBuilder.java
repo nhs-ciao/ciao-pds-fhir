@@ -9,7 +9,7 @@ import uk.nhs.interoperability.payloads.vocabularies.generated.HL7StandardVersio
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingID;
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingMode;
 import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
-import uk.nhs.itk.ciao.util.PropertyReader;
+import uk.nhs.itk.ciao.configuration.CIAOConfig;
 
 public class HL7PayloadBuilder {
 	
@@ -29,12 +29,12 @@ public class HL7PayloadBuilder {
 		return true;
 	}
 	
-	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth) {
+	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth, CIAOConfig cipConfig) throws Exception {
 		
-		String ciaoASID = PropertyReader.getProperty("ASID");
-		String pdsASID = PropertyReader.getProperty("PDSASID");
-		String pdsURL = PropertyReader.getProperty("PDSURL");
-		String fromAddress = PropertyReader.getProperty("SOAPFromAddress");
+		String ciaoASID = cipConfig.getConfigValue("ASID");
+		String pdsASID = cipConfig.getConfigValue("PDSASID");
+		String pdsURL = cipConfig.getConfigValue("PDSURL");
+		String fromAddress = cipConfig.getConfigValue("SOAPFromAddress");
 		System.out.println(ciaoASID);
 		
 		SpineSOAP template = new SpineSOAP();

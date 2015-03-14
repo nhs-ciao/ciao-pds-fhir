@@ -1,5 +1,9 @@
 package uk.nhs.itk.ciao.fhir;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.naming.NamingException;
 
 import org.apache.camel.CamelContext;
@@ -10,8 +14,11 @@ import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import uk.nhs.itk.ciao.util.PropertyReader;
+import uk.nhs.itk.ciao.configuration.CIAOConfig;
+import uk.nhs.itk.ciao.util.GlobalConstants;
 
 /**
  * To test the CIP pointing at TKW use one of the following:
@@ -33,12 +40,19 @@ import uk.nhs.itk.ciao.util.PropertyReader;
  * @author Adam Hatherly
  *
  */
-public class RunCIP {
-
+public class RunCIP implements GlobalConstants {
+	
+	private static Logger logger = LoggerFactory.getLogger(RunCIP.class);
+	
 	public static void main(String[] args) {
 		try {
+			// Initialise CIP config
+			Properties defaultConfig = loadDefaultConfig();
+			String version = defaultConfig.get("cip.version").toString();
+			String cipName = defaultConfig.get("cip.name").toString();
+			CIAOConfig cipConfig = new CIAOConfig(args, cipName, version, defaultConfig);
 			// Start camel
-			CamelContext context = createCamelContext();
+			CamelContext context = createCamelContext(cipConfig);
 			context.setStreamCaching(true);
 			context.setTracing(true);
 			context.getProperties().put(Exchange.LOG_DEBUG_BODY_STREAMS, "true");
@@ -51,16 +65,44 @@ public class RunCIP {
 		}
 	}
 	
-	private static CamelContext createCamelContext() throws Exception {	
+	private static Properties loadDefaultConfig() {
+		InputStream in = null;
+		Properties defaultProperties = new Properties();
+        try {
+        	in = RunCIP.class.getClassLoader().getResourceAsStream(CONFIG_FILE);
+            if (in != null) {
+            	defaultProperties.load(in);
+            	in.close();
+            }
+        } catch (Exception ex) {
+       		logger.error("Default config not found: " + CONFIG_FILE, ex);
+       		return null;
+        } finally {
+            try {
+                if (in != null) {
+                	in.close();
+                }
+            } catch (IOException ex) {
+            }
+        }
+        return defaultProperties;
+	}
+	
+	private static CamelContext createCamelContext(CIAOConfig cipConfig) throws Exception {	
 		
 		JndiContext jndi = new JndiContext();
+		
+		// Store our CIP config
+		jndi.bind("cipConfig", cipConfig);
+		
+		// Add bean mappings
 		populateCamelRegistry(jndi);
 		
 		// Initialise the TLS configuration for the Spine connection
-		initialiseTLS(jndi);
+		initialiseTLS(jndi, cipConfig);
 		
 		CamelContext context = new DefaultCamelContext(jndi);
-
+		
 		// Now, configure our jms component to use seda, which is a simple in-memory queue. In the live
 		// component, this would be configured to use activemq
 		context.addComponent("jms", context.getComponent("seda"));
@@ -82,20 +124,20 @@ public class RunCIP {
 	/**
 	 * Initialise the Java Secure Socket Extensions for use in Camel Components
 	 * @param jndi
-	 * @throws NamingException 
+	 * @throws Exception 
 	 */
-	private static void initialiseTLS(JndiContext jndi) throws NamingException {
+	private static void initialiseTLS(JndiContext jndi, CIAOConfig cipConfig) throws Exception {
 		
-		if (PropertyReader.getProperty("TLS_ENABLED").equals("true")) {
+		if (cipConfig.getConfigValue("TLS_ENABLED").equals("true")) {
 		
 			// Key Store
 			KeyStoreParameters ksp = new KeyStoreParameters();
-			ksp.setResource(PropertyReader.getProperty("KEY_STORE"));
-			ksp.setPassword(PropertyReader.getProperty("KEY_STORE_PASSWORD"));
+			ksp.setResource(cipConfig.getConfigValue("KEY_STORE"));
+			ksp.setPassword(cipConfig.getConfigValue("KEY_STORE_PASSWORD"));
 	
 			KeyManagersParameters kmp = new KeyManagersParameters();
 			kmp.setKeyStore(ksp);
-			kmp.setKeyPassword(PropertyReader.getProperty("KEY_PASSWORD"));
+			kmp.setKeyPassword(cipConfig.getConfigValue("KEY_PASSWORD"));
 	
 			//FilterParameters filter = new FilterParameters();
 			//filter.getInclude().add(".*");
@@ -104,8 +146,8 @@ public class RunCIP {
 			
 			// Trust Store
 			KeyStoreParameters trustStore = new KeyStoreParameters();
-			ksp.setResource(PropertyReader.getProperty("TRUST_STORE"));
-			ksp.setPassword(PropertyReader.getProperty("TRUST_STORE_PASSWORD"));
+			ksp.setResource(cipConfig.getConfigValue("TRUST_STORE"));
+			ksp.setPassword(cipConfig.getConfigValue("TRUST_STORE_PASSWORD"));
 			
 			TrustManagersParameters tmgr = new TrustManagersParameters();
 			tmgr.setKeyStore(trustStore);
