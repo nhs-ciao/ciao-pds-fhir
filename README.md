@@ -32,7 +32,7 @@ In order for the CIP to work, currently you will need to have a copy of the Spin
 Scope / Progress
 ----------------
 
-NOTE: This is a limited proof-of-concept CIP. As part of the ongoing development of CIAO, it may be desiable to develop a full PDS FHIR CIP. The discussion around the design of such a CIP will be held in the [CIAO documentation repository](https://github.com/nhs-ciao/ciao-design/tree/master/CIP%20Design)
+NOTE: This is a limited proof-of-concept CIP. As part of the ongoing development of CIAO, it may be desiable to develop a full PDS FHIR CIP. The discussion around the design of such a CIP will be held in the [CIAO design repository](https://github.com/nhs-ciao/ciao-design)
 
 Specific functionality for this proof-of-concept CIP:
 
@@ -48,7 +48,7 @@ Specific functionality for this proof-of-concept CIP:
 * Error handling **not started**
 * Add Unit Tests **not started**
 * Add JMX hooks **not started**
-* Add proper configuration management **not started**
+* Configuration management using the [ciao-configuration](https://github.com/nhs-ciao/ciao-utils/tree/master/ciao-configuration) project **complete**
 * Test in an OSGi container (Service Mix) **not started**
 
 Potential additional enhancements:
