@@ -58,7 +58,7 @@ public class CIPRoutes extends RouteBuilder {
     		.choice()
             	.when(header(Exchange.HTTP_METHOD).isEqualTo("GET"))
             		.log("GET Request")
-			        .beanRef("patientGetProcessor")    		
+			        .beanRef("patientGetProcessor")
 			    	.to("direct:spineSender")
             	.otherwise()
             		.log("OTHER Request")
@@ -66,19 +66,21 @@ public class CIPRoutes extends RouteBuilder {
 
     	// Send to Spine
     	from("direct:spineSender").routeId("fhir-patient-spineSender")
+    		.wireTap("jms:ciao-spineRequestAudit")
     		// Actual URL is set in a request header prior to the below being called
-    	    .to("jetty:http://dummyurl?throwExceptionOnFailure=false")
-    	    //.to("jetty:http://dummyurl?throwExceptionOnFailure=false&sslContextParametersRef=spineSSLContextParameters")
+    		.to("https://dummyurl?throwExceptionOnFailure=false")
     		.to("direct:responseProcessor");
     	
     	// Parse the response
     	from("direct:responseProcessor")
-    		//.wireTap("jms:ciao-spineAudit")
+    		.wireTap("jms:ciao-spineResponseAudit")
     		.beanRef("patientResponseProcessor");
     	
-    	// Log spine responses
-    	//from("jms:ciao-spineAudit")
-    	//	.to("file:log/spine");
+    	// Log spine messages
+    	from("jms:ciao-spineRequestAudit")
+    		.to("file:log/spine?fileName=${date:now:yyyy-MM-dd}-${exchangeId}-Request.xml");
+    	from("jms:ciao-spineResponseAudit")
+    		.to("file:log/spine?fileName=${date:now:yyyy-MM-dd}-${exchangeId}-Response.xml");
     	
     	// Conformance Profile
     	from("jetty:http://0.0.0.0:8080/fhir/metadata?traceEnabled=true").routeId("fhir-conformance")

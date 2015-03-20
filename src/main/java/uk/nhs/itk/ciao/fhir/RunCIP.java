@@ -5,15 +5,20 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import javax.naming.NamingException;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.component.http.SSLContextParametersSecureProtocolSocketFactory;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.jndi.JndiContext;
 import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,7 +138,7 @@ public class RunCIP implements GlobalConstants {
 			// Key Store
 			KeyStoreParameters ksp = new KeyStoreParameters();
 			ksp.setResource(cipConfig.getConfigValue("KEY_STORE"));
-			ksp.setPassword(cipConfig.getConfigValue("KEY_STORE_PASSWORD"));
+			ksp.setPassword(cipConfig.getConfigValue("KEY_STORE_PW"));
 	
 			KeyManagersParameters kmp = new KeyManagersParameters();
 			kmp.setKeyStore(ksp);
@@ -145,10 +150,10 @@ public class RunCIP implements GlobalConstants {
 			//sccp.setCipherSuitesFilter(filter);
 			
 			// Trust Store
-			KeyStoreParameters trustStore = new KeyStoreParameters();
-			ksp.setResource(cipConfig.getConfigValue("TRUST_STORE"));
-			ksp.setPassword(cipConfig.getConfigValue("TRUST_STORE_PASSWORD"));
 			
+			KeyStoreParameters trustStore = new KeyStoreParameters();
+			trustStore.setResource(cipConfig.getConfigValue("TRUST_STORE"));
+			trustStore.setPassword(cipConfig.getConfigValue("TRUST_STORE_PW"));
 			TrustManagersParameters tmgr = new TrustManagersParameters();
 			tmgr.setKeyStore(trustStore);
 			
@@ -161,7 +166,16 @@ public class RunCIP implements GlobalConstants {
 			jndi.bind("spineSSLContextParameters", scp);
 	
 			//SSLContext context = scp.createSSLContext();
-			//SSLEngine engine = scp.createSSLEngine();
+			//SSLEngine engine = context.createSSLEngine();
+			
+			ProtocolSocketFactory factory =
+				    new SSLContextParametersSecureProtocolSocketFactory(scp);
+				 
+			Protocol.registerProtocol("https",
+						new Protocol(
+				        "https",
+				        factory,
+				        443));
 		} else {
 			// Bind an empty SSLContext
 			jndi.bind("spineSSLContextParameters", new SSLContextParameters());
