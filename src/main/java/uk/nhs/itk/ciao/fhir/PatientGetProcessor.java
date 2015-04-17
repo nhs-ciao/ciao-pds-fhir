@@ -5,6 +5,7 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.nhs.interoperability.payloads.util.FileLoader;
 import uk.nhs.itk.ciao.configuration.CIAOConfig;
 import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
 

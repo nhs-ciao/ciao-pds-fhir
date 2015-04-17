@@ -1,11 +1,11 @@
 package uk.nhs.itk.ciao.fhir.resources;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hl7.fhir.instance.client.ResourceFormat;
-import org.hl7.fhir.instance.formats.XmlComposer;
 import org.hl7.fhir.instance.model.Address.AddressUse;
+import org.hl7.fhir.instance.model.AtomFeed;
 import org.hl7.fhir.instance.model.BooleanType;
 import org.hl7.fhir.instance.model.CodeableConcept;
 import org.hl7.fhir.instance.model.Coding;
@@ -23,7 +23,7 @@ import uk.nhs.itk.ciao.util.V3FHIRTypeMappers;
 
 public class PatientResource {
 	
-	public static String buildPatientResource(uk.nhs.itk.ciao.model.Patient spinePatient, ResourceFormat format) {
+	public static String buildPatientResource(uk.nhs.itk.ciao.model.Patient spinePatient, ResourceFormat format, String fhirBase) {
 		Patient patientResource = new Patient();
 		
 		// Name
@@ -95,7 +95,12 @@ public class PatientResource {
 		}
 		// PracticeCode
 		
-		return ResourceSerialiser.serialise(patientResource, format);
+		// Now put our patient resource into a bundle
+		List<Patient> patientList = new ArrayList<Patient>();
+		patientList.add(patientResource);
+		AtomFeed feed = PatientResultBundle.buildBundle(patientList, fhirBase);
+		
+		return ResourceSerialiser.serialise(feed, format);
 		
 		/*
 		If we were using DSTU2 the code would be different - e.g.:
