@@ -124,6 +124,10 @@ public class RunCIP implements GlobalConstants {
 		jndi.bind("patientPostProcessor", new PatientPostProcessor());
 		jndi.bind("patientResponseProcessor", new PatientResponseProcessor());
 		jndi.bind("conformanceProcessor", new ConformanceProcessor());
+		
+		jndi.bind("QueryActFailedProcessor", new QueryActFailedProcessor());
+		jndi.bind("SOAPFaultProcessor", new SOAPFaultProcessor());
+		jndi.bind("HTTPErrorProcessor", new HTTPErrorProcessor());
 	}
 	
 	/**

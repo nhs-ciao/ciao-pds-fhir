@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SOAP-ENV:Envelope xmlns:crs="http://national.carerecords.nhs.uk/schema/crs/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns="urn:hl7-org:v3" xmlns:hl7="urn:hl7-org:v3">
+	<SOAP-ENV:Header>
+		<wsa:MessageID>uuid:6BB42352-EA94-11E4-A47E-6C3BE5A73F1D</wsa:MessageID>
+		<wsa:Action>urn:nhs:names:services:pdsquery/QUQI_IN010000UK14</wsa:Action>
+		<wsa:To>http://ciaotest1-x26.hscic.nhs.uk</wsa:To>
+		<wsa:From>
+			<wsa:Address>https://msg.dev.spine2.ncrs.nhs.uk/sync-service</wsa:Address>
+		</wsa:From>
+		<communicationFunctionRcv typeCode="RCV">
+			<device classCode="DEV" determinerCode="INSTANCE">
+				<id root="1.2.826.0.1285.0.2.0.107" extension="200000000042"/>
+			</device>
+		</communicationFunctionRcv>
+		<communicationFunctionSnd typeCode="SND">
+			<device classCode="DEV" determinerCode="INSTANCE">
+				<id root="1.2.826.0.1285.0.2.0.107" extension="928942012545"/>
+			</device>
+		</communicationFunctionSnd>
+		<wsa:RelatesTo>uuid:119F88D4-FD2D-41B5-9BC9-7C4AE95D79B0</wsa:RelatesTo>
+	</SOAP-ENV:Header>
+	<SOAP-ENV:Body>
+		<traceQueryResponse>
+			<QUQI_IN010000UK14>
+				<id root="6BB42352-EA94-11E4-A47E-6C3BE5A73F1D"/>
+				<creationTime value="20150424151311"/>
+				<versionCode code="3NPfIT6.3.01"/>
+				<interactionId root="2.16.840.1.113883.2.1.3.2.4.12" extension="QUQI_IN010000UK14"/>
+				<processingCode code="P"/>
+				<processingModeCode code="T"/>
+				<acceptAckCode code="NE"/>
+				<acknowledgement typeCode="AE">
+					<messageRef>
+						<id root="2CE38202-8989-45FF-A764-5577CF25C466"/>
+					</messageRef>
+				</acknowledgement>
+				<communicationFunctionRcv typeCode="RCV">
+					<device classCode="DEV" determinerCode="INSTANCE">
+						<id root="1.2.826.0.1285.0.2.0.107" extension="200000000042"/>
+					</device>
+				</communicationFunctionRcv>
+				<communicationFunctionSnd typeCode="SND">
+					<device classCode="DEV" determinerCode="INSTANCE">
+						<id root="1.2.826.0.1285.0.2.0.107" extension="928942012545"/>
+					</device>
+				</communicationFunctionSnd>
+				<ControlActEvent classCode="CACT" moodCode="EVN">
+					<author1 typeCode="AUT">
+						<AgentSystemSDS classCode="AGNT">
+							<agentSystemSDS classCode="DEV" determinerCode="INSTANCE">
+								<id root="1.2.826.0.1285.0.2.0.107" extension="928942012545"/>
+							</agentSystemSDS>
+						</AgentSystemSDS>
+					</author1>
+					<reason typeCode="RSON">
+						<justifyingDetectedIssueEvent classCode="ALRT" moodCode="EVN">
+							<code code="0" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.42" displayName="Generic Error">
+								<qualifier code="ER"/>
+							</code>
+						</justifyingDetectedIssueEvent>
+					</reason>
+					<reason typeCode="RSON">
+						<justifyingDetectedIssueEvent classCode="ALRT" moodCode="EVN">
+							<code code="ST001" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.42" displayName="All mandatory search fields must be present (birth time, gender, family name,include record indicator and Message Version).">
+								<qualifier code="ER"/>
+							</code>
+						</justifyingDetectedIssueEvent>
+					</reason>
+					<queryAck type="QueryAck">
+						<queryResponseCode code="ID"/>
+					</queryAck>
+				</ControlActEvent>
+			</QUQI_IN010000UK14>
+		</traceQueryResponse>
+	</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

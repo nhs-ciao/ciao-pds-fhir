@@ -18,6 +18,7 @@ package uk.nhs.itk.ciao.fhir;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.xml.Namespaces;
 
 /**
  * Routes for our FHIR endpoint
@@ -49,6 +50,9 @@ public class CIPRoutes extends RouteBuilder {
 
     public void configure() {
     	
+    	Namespaces ns = new Namespaces("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
+    	ns.add("hl7", "urn:hl7-org:v3");
+    	
     	// Put all new http requests for the patient resource onto a JMS queue
     	from("jetty:http://0.0.0.0:8080/fhir/Patient?traceEnabled=true").routeId("fhir-patient-http")
 			.to("jms:ciao-fhir");
@@ -69,12 +73,21 @@ public class CIPRoutes extends RouteBuilder {
     		.wireTap("jms:ciao-spineRequestAudit")
     		// Actual URL is set in a request header prior to the below being called
     		.to("https://dummyurl?throwExceptionOnFailure=false")
+    		.wireTap("jms:ciao-spineResponseAudit")
     		.to("direct:responseProcessor");
     	
     	// Parse the response
     	from("direct:responseProcessor")
-    		.wireTap("jms:ciao-spineResponseAudit")
-    		.beanRef("patientResponseProcessor");
+    		.streamCaching()
+    		// Route based on type of response from Spine
+    		.choice()
+    			.when(header(Exchange.HTTP_RESPONSE_CODE).not().startsWith("2")).beanRef("HTTPErrorProcessor")
+    		.otherwise()
+    			.convertBodyTo(org.w3c.dom.Document.class)
+    			.choice()
+	    			.when().xpath("/SOAP-ENV:Envelope/SOAP-ENV:Body/hl7:traceQueryResponse/hl7:QUQI_IN010000UK14", ns).beanRef("QueryActFailedProcessor")
+	    			.when().xpath("/SOAP-ENV:Envelope/SOAP-ENV:Body/SOAP-ENV:Fault", ns).beanRef("SOAPFaultProcessor")
+	    			.otherwise().beanRef("patientResponseProcessor");
     	
     	// Log spine messages
     	from("jms:ciao-spineRequestAudit")

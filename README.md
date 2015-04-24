@@ -39,13 +39,16 @@ Specific functionality for this proof-of-concept CIP:
 * Accept GET requests for a patient resource with basic FHIR query parameters (e.g. http://localhost:8080/fhir/Patient?family=SMITH) **complete**
 * Parse the request and build a Spine simple trace message **complete**
 * Send the request to a running instance of the Spine TKW simulator **complete**
-* Send the request to a Spine test region over a TLS MA link **not started**
+* Send the request to a Spine test region over a TLS MA link **complete**
 * Parse the response **complete**
 * Populate a FHIR patient resource and return it to the requestor **complete**
-* Use FHIR bundle for returning results **not started**
+* Use FHIR bundle for returning results **in progress**
 * FHIR conformance reporting **complete**
 * JSON Support **complete**
-* Error handling **not started**
+* Error handling (HTTP Error) **in progress**
+* Error handling (SOAP Fault) **in progress**
+* Error handling (HL7 QueryActFailed) **in progress**
+* Error handling (FHIR OperationOutcome) **not started**
 * Add Unit Tests **not started**
 * Add JMX hooks **not started**
 * Configuration management using the [ciao-configuration](https://github.com/nhs-ciao/ciao-utils/tree/master/ciao-configuration) project **complete**
