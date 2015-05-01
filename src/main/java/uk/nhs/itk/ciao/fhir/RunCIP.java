@@ -95,6 +95,7 @@ public class RunCIP implements GlobalConstants {
 	
 	private static CamelContext createCamelContext(CIAOConfig cipConfig) throws Exception {	
 		
+		// Create a new JNDI context as our camel registry
 		JndiContext jndi = new JndiContext();
 		
 		// Store our CIP config
@@ -160,14 +161,6 @@ public class RunCIP implements GlobalConstants {
 			
 			jndi.bind("spineSSLContextParameters", scp);
 	
-			/*ProtocolSocketFactory factory =
-				    new SSLContextParametersSecureProtocolSocketFactory(scp);
-				 
-			Protocol.registerProtocol("https",
-						new Protocol(
-				        "https",
-				        factory,
-				        443));*/
 		} else {
 			// Bind an empty SSLContext
 			jndi.bind("spineSSLContextParameters", new SSLContextParameters());
