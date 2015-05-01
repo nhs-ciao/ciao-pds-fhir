@@ -11,6 +11,7 @@ import javax.net.ssl.SSLEngine;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.http.SSLContextParametersSecureProtocolSocketFactory;
+import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.jndi.JndiContext;
 import org.apache.camel.util.jsse.KeyManagersParameters;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.nhs.itk.ciao.configuration.CIAOConfig;
+import uk.nhs.itk.ciao.util.CiaoPropertyResolver;
 import uk.nhs.itk.ciao.util.GlobalConstants;
 
 /**
@@ -56,8 +58,12 @@ public class RunCIP implements GlobalConstants {
 			String version = defaultConfig.get("cip.version").toString();
 			String cipName = defaultConfig.get("cip.name").toString();
 			CIAOConfig cipConfig = new CIAOConfig(args, cipName, version, defaultConfig);
+			
 			// Start camel
 			CamelContext context = createCamelContext(cipConfig);
+			
+			//CiaoPropertyResolver.createPropertiesComponent(CONFIG_FILE, args, context);
+			
 			context.setStreamCaching(true);
 			context.setTracing(true);
 			context.getProperties().put(Exchange.LOG_DEBUG_BODY_STREAMS, "true");
