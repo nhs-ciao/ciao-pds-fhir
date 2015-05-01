@@ -143,43 +143,31 @@ public class RunCIP implements GlobalConstants {
 			KeyStoreParameters ksp = new KeyStoreParameters();
 			ksp.setResource(cipConfig.getConfigValue("KEY_STORE"));
 			ksp.setPassword(cipConfig.getConfigValue("KEY_STORE_PW"));
-	
 			KeyManagersParameters kmp = new KeyManagersParameters();
 			kmp.setKeyStore(ksp);
 			kmp.setKeyPassword(cipConfig.getConfigValue("KEY_PASSWORD"));
 	
-			//FilterParameters filter = new FilterParameters();
-			//filter.getInclude().add(".*");
-			//SSLContextClientParameters sccp = new SSLContextClientParameters();
-			//sccp.setCipherSuitesFilter(filter);
-			
-			// Trust Store
-			
+			// Trust Store		
 			KeyStoreParameters trustStore = new KeyStoreParameters();
 			trustStore.setResource(cipConfig.getConfigValue("TRUST_STORE"));
 			trustStore.setPassword(cipConfig.getConfigValue("TRUST_STORE_PW"));
 			TrustManagersParameters tmgr = new TrustManagersParameters();
 			tmgr.setKeyStore(trustStore);
-			
 	
 			SSLContextParameters scp = new SSLContextParameters();
-			//scp.setClientParameters(sccp);
 			scp.setKeyManagers(kmp);
 			scp.setTrustManagers(tmgr);
 			
 			jndi.bind("spineSSLContextParameters", scp);
 	
-			//SSLContext context = scp.createSSLContext();
-			//SSLEngine engine = context.createSSLEngine();
-			
-			ProtocolSocketFactory factory =
+			/*ProtocolSocketFactory factory =
 				    new SSLContextParametersSecureProtocolSocketFactory(scp);
 				 
 			Protocol.registerProtocol("https",
 						new Protocol(
 				        "https",
 				        factory,
-				        443));
+				        443));*/
 		} else {
 			// Bind an empty SSLContext
 			jndi.bind("spineSSLContextParameters", new SSLContextParameters());

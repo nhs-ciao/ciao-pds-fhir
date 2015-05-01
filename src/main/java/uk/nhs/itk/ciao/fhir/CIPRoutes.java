@@ -72,7 +72,7 @@ public class CIPRoutes extends RouteBuilder {
     	from("direct:spineSender").routeId("fhir-patient-spineSender")
     		.wireTap("jms:ciao-spineRequestAudit")
     		// Actual URL is set in a request header prior to the below being called
-    		.to("https://dummyurl?throwExceptionOnFailure=false")
+    		.to("http4://dummyurl?throwExceptionOnFailure=false&sslContextParametersRef=spineSSLContextParameters")
     		.wireTap("jms:ciao-spineResponseAudit")
     		.to("direct:responseProcessor");
     	
