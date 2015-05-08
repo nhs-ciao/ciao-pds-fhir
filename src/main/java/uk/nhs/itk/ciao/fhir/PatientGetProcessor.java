@@ -2,6 +2,7 @@ package uk.nhs.itk.ciao.fhir;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.PropertyInject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,9 @@ import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
 public class PatientGetProcessor implements Processor {
 	private static Logger logger = LoggerFactory.getLogger(PatientGetProcessor.class);
 	
+	@PropertyInject("PDSURL")
+	private String pdsURL;
+	
 	public void process(Exchange exchange) throws Exception {
 		
 		// Search examples from FHIR spec
@@ -36,14 +40,14 @@ public class PatientGetProcessor implements Processor {
 		// GET [base]/Patient?identifier=http://acme.org/patient|2345
 		
 		// GET [base]/Patient?gender:text=male
-		CIAOConfig ciaoConfig = exchange.getContext().getRegistry().lookupByNameAndType("cipConfig", CIAOConfig.class);
+		/*CIAOConfig ciaoConfig = exchange.getContext().getRegistry().lookupByNameAndType("cipConfig", CIAOConfig.class);
 		if (ciaoConfig == null) {
 			logger.error("CIAO Config is NULL!");
 		} else {
 			logger.info("Config: ", ciaoConfig);
-		}
-		String pdsURL = ciaoConfig.getConfigValue("PDSURL");
+		}*/
 		
+		logger.info("PDS URL: " + pdsURL);
 		Message in = exchange.getIn();
 		
 		String surname = null;
@@ -61,7 +65,7 @@ public class PatientGetProcessor implements Processor {
 			dateOfBirth = in.getHeader("birthdate").toString();
 		}
 		
-		String requestPayload = HL7PayloadBuilder.buildSimpleTrace(surname, gender, dateOfBirth, ciaoConfig);
+		String requestPayload = HL7PayloadBuilder.buildSimpleTrace(surname, gender, dateOfBirth);
 		
 		Message out = exchange.getOut();
 		out.setBody(requestPayload);

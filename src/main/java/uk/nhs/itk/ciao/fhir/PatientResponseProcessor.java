@@ -5,6 +5,7 @@ import static org.hl7.fhir.instance.client.ResourceFormat.RESOURCE_JSON;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.PropertyInject;
 import org.hl7.fhir.instance.client.ResourceFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +18,18 @@ import uk.nhs.itk.ciao.spine.HL7ResponseParser;
 
 public class PatientResponseProcessor implements Processor {
 	private static Logger logger = LoggerFactory.getLogger(PatientResponseProcessor.class);
+	
+	@PropertyInject("FHIR_BASE")
+	String fhirBase;
 
 	public void process(Exchange exchange) throws Exception {
 		
-		CIAOConfig ciaoConfig = exchange.getContext().getRegistry().lookupByNameAndType("cipConfig", CIAOConfig.class);
+		/*CIAOConfig ciaoConfig = exchange.getContext().getRegistry().lookupByNameAndType("cipConfig", CIAOConfig.class);
 		if (ciaoConfig == null) {
 			logger.error("CIAO Config is NULL!");
 		} else {
 			logger.info("Config: ", ciaoConfig);
-		}
-		String fhirBase = ciaoConfig.getConfigValue("FHIR_BASE");
+		}*/
 		
 		Message in = exchange.getIn();
 		

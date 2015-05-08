@@ -55,7 +55,7 @@ public class CIPRoutes extends RouteBuilder {
     	
     	// Put all new http requests for the patient resource onto a JMS queue
     	from("jetty:http://0.0.0.0:8080/fhir/Patient?traceEnabled=true").routeId("fhir-patient-http")
-			.to("jms:ciao-fhir");
+    		.to("jms:ciao-fhir");
     	
     	// Read each request from the queue and route it to the appropriate bean to generate a response
     	from("jms:ciao-fhir").routeId("fhir-patient-requesthandler")

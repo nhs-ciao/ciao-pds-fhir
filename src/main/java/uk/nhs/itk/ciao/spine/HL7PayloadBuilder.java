@@ -1,5 +1,7 @@
 package uk.nhs.itk.ciao.spine;
 
+import org.apache.camel.PropertyInject;
+
 import uk.nhs.interoperability.payloads.DateValue;
 import uk.nhs.interoperability.payloads.commontypes.SMSPPersonName;
 import uk.nhs.interoperability.payloads.spine.SpineSOAP;
@@ -12,6 +14,15 @@ import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
 import uk.nhs.itk.ciao.configuration.CIAOConfig;
 
 public class HL7PayloadBuilder {
+	
+	@PropertyInject("ASID")
+	private static String ciaoASID;
+	@PropertyInject("PDSASID")
+	private static String pdsASID;
+	@PropertyInject("PDSURL")
+	private static String pdsURL;
+	@PropertyInject("SOAPFromAddress")
+	private static String fromAddress;
 	
 	/**
 	 * This method will validate the request parameters provided
@@ -29,12 +40,8 @@ public class HL7PayloadBuilder {
 		return true;
 	}
 	
-	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth, CIAOConfig cipConfig) throws Exception {
+	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth) throws Exception {
 		
-		String ciaoASID = cipConfig.getConfigValue("ASID");
-		String pdsASID = cipConfig.getConfigValue("PDSASID");
-		String pdsURL = cipConfig.getConfigValue("PDSURL");
-		String fromAddress = cipConfig.getConfigValue("SOAPFromAddress");
 		System.out.println(ciaoASID);
 		
 		SpineSOAP template = new SpineSOAP();

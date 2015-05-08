@@ -54,15 +54,15 @@ public class RunCIP implements GlobalConstants {
 	public static void main(String[] args) {
 		try {
 			// Initialise CIP config
-			Properties defaultConfig = loadDefaultConfig();
-			String version = defaultConfig.get("cip.version").toString();
-			String cipName = defaultConfig.get("cip.name").toString();
-			CIAOConfig cipConfig = new CIAOConfig(args, cipName, version, defaultConfig);
+			//Properties defaultConfig = loadDefaultConfig();
+			//String version = defaultConfig.get("cip.version").toString();
+			//String cipName = defaultConfig.get("cip.name").toString();
+			//CIAOConfig cipConfig = new CIAOConfig(args, cipName, version, defaultConfig);
 			
 			// Start camel
-			CamelContext context = createCamelContext(cipConfig);
+			CamelContext context = createCamelContext(null);
 			
-			//CiaoPropertyResolver.createPropertiesComponent(CONFIG_FILE, args, context);
+			CiaoPropertyResolver.createPropertiesComponent(CONFIG_FILE, args, context);
 			
 			context.setStreamCaching(true);
 			context.setTracing(true);
@@ -76,36 +76,13 @@ public class RunCIP implements GlobalConstants {
 		}
 	}
 	
-	private static Properties loadDefaultConfig() {
-		InputStream in = null;
-		Properties defaultProperties = new Properties();
-        try {
-        	in = RunCIP.class.getClassLoader().getResourceAsStream(CONFIG_FILE);
-            if (in != null) {
-            	defaultProperties.load(in);
-            	in.close();
-            }
-        } catch (Exception ex) {
-       		logger.error("Default config not found: " + CONFIG_FILE, ex);
-       		return null;
-        } finally {
-            try {
-                if (in != null) {
-                	in.close();
-                }
-            } catch (IOException ex) {
-            }
-        }
-        return defaultProperties;
-	}
-	
 	private static CamelContext createCamelContext(CIAOConfig cipConfig) throws Exception {	
 		
 		// Create a new JNDI context as our camel registry
 		JndiContext jndi = new JndiContext();
 		
 		// Store our CIP config
-		jndi.bind("cipConfig", cipConfig);
+		//jndi.bind("cipConfig", cipConfig);
 		
 		// Add bean mappings
 		populateCamelRegistry(jndi);
@@ -143,7 +120,7 @@ public class RunCIP implements GlobalConstants {
 	 * @throws Exception 
 	 */
 	private static void initialiseTLS(JndiContext jndi, CIAOConfig cipConfig) throws Exception {
-		
+		/*
 		if (cipConfig.getConfigValue("TLS_ENABLED").equals("true")) {
 		
 			// Key Store
@@ -167,9 +144,9 @@ public class RunCIP implements GlobalConstants {
 			
 			jndi.bind("spineSSLContextParameters", scp);
 	
-		} else {
+		} else {*/
 			// Bind an empty SSLContext
 			jndi.bind("spineSSLContextParameters", new SSLContextParameters());
-		}
+		//}
 	}
 }
