@@ -69,7 +69,6 @@ public class RunCIP extends uk.nhs.itk.ciao.RunCIP implements GlobalConstants {
 	 */
 	@Override
 	protected void populateCamelRegistry(JndiContext jndi) throws Exception {
-		//jndi.bind("patientGetProcessor", new PatientGetProcessor());
 		jndi.bind("payloadBuilder", new HL7PayloadBuilder());
 		jndi.bind("patientPostProcessor", new PatientPostProcessor());
 		jndi.bind("patientResponseProcessor", new PatientResponseProcessor());
