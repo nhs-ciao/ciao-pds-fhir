@@ -1,30 +1,16 @@
 package uk.nhs.itk.ciao.fhir;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import javax.naming.NamingException;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.component.http.SSLContextParametersSecureProtocolSocketFactory;
-import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.jndi.JndiContext;
 import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.nhs.itk.ciao.configuration.CIAOConfig;
-import uk.nhs.itk.ciao.util.CiaoPropertyResolver;
+import uk.nhs.itk.ciao.properties.CiaoPropertyResolver;
+import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
 import uk.nhs.itk.ciao.util.GlobalConstants;
 
 /**
@@ -47,64 +33,44 @@ import uk.nhs.itk.ciao.util.GlobalConstants;
  * @author Adam Hatherly
  *
  */
-public class RunCIP implements GlobalConstants {
+public class RunCIP extends uk.nhs.itk.ciao.RunCIP implements GlobalConstants {
 	
 	private static Logger logger = LoggerFactory.getLogger(RunCIP.class);
 	
-	public static void main(String[] args) {
-		try {
-			// Initialise CIP config
-			//Properties defaultConfig = loadDefaultConfig();
-			//String version = defaultConfig.get("cip.version").toString();
-			//String cipName = defaultConfig.get("cip.name").toString();
-			//CIAOConfig cipConfig = new CIAOConfig(args, cipName, version, defaultConfig);
-			
-			// Start camel
-			CamelContext context = createCamelContext(null);
-			
-			CiaoPropertyResolver.createPropertiesComponent(CONFIG_FILE, args, context);
-			
-			context.setStreamCaching(true);
-			context.setTracing(true);
-			context.getProperties().put(Exchange.LOG_DEBUG_BODY_STREAMS, "true");
-			context.addRoutes(new CIPRoutes());
-			context.start();
-			System.out.println("CAMEL STARTED");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	/**
+	 * This is the main class for running CIAO as a simple java process (e.g. within docker)
+	 * @param args Command line arguments (e.g. ETCD URL)
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		// Initialise Camel context
+		new RunCIP().initialiseCamel(args);
 	}
 	
-	private static CamelContext createCamelContext(CIAOConfig cipConfig) throws Exception {	
+	/**
+	 * Initialise the camel context and start Camel
+	 * @param args
+	 * @throws Exception
+	 */
+	private void initialiseCamel(String[] args) throws Exception {
+		CamelContext context = super.init(args, CONFIG_FILE);
 		
-		// Create a new JNDI context as our camel registry
-		JndiContext jndi = new JndiContext();
-		
-		// Store our CIP config
-		//jndi.bind("cipConfig", cipConfig);
-		
-		// Add bean mappings
-		populateCamelRegistry(jndi);
-		
-		// Initialise the TLS configuration for the Spine connection
-		initialiseTLS(jndi, cipConfig);
-		
-		CamelContext context = new DefaultCamelContext(jndi);
-		
-		// Now, configure our jms component to use seda, which is a simple in-memory queue. In the live
-		// component, this would be configured to use activemq
+		// Point our JMS component at an in-memory queue
 		context.addComponent("jms", context.getComponent("seda"));
-		return context;
+		
+		context.addRoutes(new FHIRRoutes());
+		super.startCamel(context);
 	}
 	
 	/**
 	 * Register our custom beans using JNDI (in an OSGi deployment this is configured in beans.xml) 
 	 * @param jndi
-	 * @throws NamingException
+	 * @throws Exception 
 	 */
-	private static void populateCamelRegistry(JndiContext jndi) throws NamingException {
-		jndi.bind("patientGetProcessor", new PatientGetProcessor());
+	@Override
+	protected void populateCamelRegistry(JndiContext jndi) throws Exception {
+		//jndi.bind("patientGetProcessor", new PatientGetProcessor());
+		jndi.bind("payloadBuilder", new HL7PayloadBuilder());
 		jndi.bind("patientPostProcessor", new PatientPostProcessor());
 		jndi.bind("patientResponseProcessor", new PatientResponseProcessor());
 		jndi.bind("conformanceProcessor", new ConformanceProcessor());
@@ -112,29 +78,32 @@ public class RunCIP implements GlobalConstants {
 		jndi.bind("QueryActFailedProcessor", new QueryActFailedProcessor());
 		jndi.bind("SOAPFaultProcessor", new SOAPFaultProcessor());
 		jndi.bind("HTTPErrorProcessor", new HTTPErrorProcessor());
+		
+		// Initialise the TLS configuration for the Spine connection
+		initialiseTLS(jndi);
 	}
-	
+
 	/**
 	 * Initialise the Java Secure Socket Extensions for use in Camel Components
 	 * @param jndi
 	 * @throws Exception 
 	 */
-	private static void initialiseTLS(JndiContext jndi, CIAOConfig cipConfig) throws Exception {
-		/*
-		if (cipConfig.getConfigValue("TLS_ENABLED").equals("true")) {
+	private static void initialiseTLS(JndiContext jndi) throws Exception {
+		
+		if (CiaoPropertyResolver.getConfigValue("TLS_ENABLED").equals("true")) {
 		
 			// Key Store
 			KeyStoreParameters ksp = new KeyStoreParameters();
-			ksp.setResource(cipConfig.getConfigValue("KEY_STORE"));
-			ksp.setPassword(cipConfig.getConfigValue("KEY_STORE_PW"));
+			ksp.setResource(CiaoPropertyResolver.getConfigValue("KEY_STORE"));
+			ksp.setPassword(CiaoPropertyResolver.getConfigValue("KEY_STORE_PW"));
 			KeyManagersParameters kmp = new KeyManagersParameters();
 			kmp.setKeyStore(ksp);
-			kmp.setKeyPassword(cipConfig.getConfigValue("KEY_PASSWORD"));
+			kmp.setKeyPassword(CiaoPropertyResolver.getConfigValue("KEY_PASSWORD"));
 	
 			// Trust Store		
 			KeyStoreParameters trustStore = new KeyStoreParameters();
-			trustStore.setResource(cipConfig.getConfigValue("TRUST_STORE"));
-			trustStore.setPassword(cipConfig.getConfigValue("TRUST_STORE_PW"));
+			trustStore.setResource(CiaoPropertyResolver.getConfigValue("TRUST_STORE"));
+			trustStore.setPassword(CiaoPropertyResolver.getConfigValue("TRUST_STORE_PW"));
 			TrustManagersParameters tmgr = new TrustManagersParameters();
 			tmgr.setKeyStore(trustStore);
 	
@@ -143,10 +112,11 @@ public class RunCIP implements GlobalConstants {
 			scp.setTrustManagers(tmgr);
 			
 			jndi.bind("spineSSLContextParameters", scp);
-	
-		} else {*/
+			logger.info("TLS enabled");
+		} else {
 			// Bind an empty SSLContext
 			jndi.bind("spineSSLContextParameters", new SSLContextParameters());
-		//}
+			logger.info("TLS NOT enabled");
+		}
 	}
 }

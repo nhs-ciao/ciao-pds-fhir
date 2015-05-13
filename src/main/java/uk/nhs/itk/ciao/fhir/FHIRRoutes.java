@@ -17,8 +17,9 @@
 package uk.nhs.itk.ciao.fhir;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.xml.Namespaces;
+
+import uk.nhs.itk.ciao.CIPRoutes;
 
 /**
  * Routes for our FHIR endpoint
@@ -46,8 +47,9 @@ import org.apache.camel.builder.xml.Namespaces;
  * Get tags		-> GET [base]/_tags
  * 
  */
-public class CIPRoutes extends RouteBuilder {
+public class FHIRRoutes extends CIPRoutes {
 
+	@Override
     public void configure() {
     	
     	Namespaces ns = new Namespaces("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
@@ -55,15 +57,19 @@ public class CIPRoutes extends RouteBuilder {
     	
     	// Put all new http requests for the patient resource onto a JMS queue
     	from("jetty:http://0.0.0.0:8080/fhir/Patient?traceEnabled=true").routeId("fhir-patient-http")
+    		.log("CIP Name: {{cip.name}}")
     		.to("jms:ciao-fhir");
     	
-    	// Read each request from the queue and route it to the appropriate bean to generate a response
+    	// Read each request from the queue and create the Spine SOAP message
     	from("jms:ciao-fhir").routeId("fhir-patient-requesthandler")
     		.choice()
             	.when(header(Exchange.HTTP_METHOD).isEqualTo("GET"))
             		.log("GET Request")
-			        .beanRef("patientGetProcessor")
-			    	.to("direct:spineSender")
+					.beanRef("payloadBuilder",
+			    				"buildSimpleTrace(${header.family}),"
+					    				+ "${header.gender}),"
+					    				+ "${header.birthdate})")
+            		.to("direct:spineSender")
             	.otherwise()
             		.log("OTHER Request")
             		.beanRef("patientPostProcessor");
@@ -71,8 +77,10 @@ public class CIPRoutes extends RouteBuilder {
     	// Send to Spine
     	from("direct:spineSender").routeId("fhir-patient-spineSender")
     		.wireTap("jms:ciao-spineRequestAudit")
-    		// Actual URL is set in a request header prior to the below being called
-    		.to("http4://dummyurl?throwExceptionOnFailure=false&sslContextParametersRef=spineSSLContextParameters")
+    		.setHeader("SOAPaction", simple("urn:nhs:names:services:pdsquery/QUPA_IN000005UK01"))
+    		.setHeader(Exchange.HTTP_URI, simple("{{PDSURL}}"))
+    		.to("http4://dummyurl?throwExceptionOnFailure=false"
+    						+ "&sslContextParametersRef=spineSSLContextParameters")
     		.wireTap("jms:ciao-spineResponseAudit")
     		.to("direct:responseProcessor");
     	
@@ -106,5 +114,7 @@ public class CIPRoutes extends RouteBuilder {
     	
     	from("direct:conformance")
 			.beanRef("conformanceProcessor");
+    	
+    	super.configure();
     }
 }

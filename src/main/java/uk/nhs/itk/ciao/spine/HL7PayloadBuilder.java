@@ -16,13 +16,13 @@ import uk.nhs.itk.ciao.configuration.CIAOConfig;
 public class HL7PayloadBuilder {
 	
 	@PropertyInject("ASID")
-	private static String ciaoASID;
+	private String ciaoASID;
 	@PropertyInject("PDSASID")
-	private static String pdsASID;
+	private String pdsASID;
 	@PropertyInject("PDSURL")
-	private static String pdsURL;
+	private String pdsURL;
 	@PropertyInject("SOAPFromAddress")
-	private static String fromAddress;
+	private String fromAddress;
 	
 	/**
 	 * This method will validate the request parameters provided
@@ -40,7 +40,7 @@ public class HL7PayloadBuilder {
 		return true;
 	}
 	
-	public static String buildSimpleTrace(String surname, String gender, String dateOfBirth) throws Exception {
+	public String buildSimpleTrace(String surname, String gender, String dateOfBirth) throws Exception {
 		
 		System.out.println(ciaoASID);
 		
