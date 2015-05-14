@@ -21,6 +21,10 @@ import uk.nhs.itk.ciao.util.GlobalConstants;
  * curl http://localhost:8080/fhir/Patient?family=LEWINGTON
  * curl http://localhost:8080/fhir/Patient?family=STAMBUKDELIFSCHITZ
  * 
+ * Specifying XML format:
+ * curl -H "Accept: application/xml+fhir" http://localhost:8080/fhir/Patient?family=PURVES
+ * curl http://localhost:8080/fhir/Patient?family=PURVES&_format=xml
+ * 
  * No match:
  * curl http://localhost:8080/fhir/Patient?family=NOMATCH
  * 

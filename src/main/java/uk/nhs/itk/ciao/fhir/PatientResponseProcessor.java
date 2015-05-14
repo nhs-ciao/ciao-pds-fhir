@@ -19,8 +19,8 @@ import uk.nhs.itk.ciao.spine.HL7ResponseParser;
 public class PatientResponseProcessor implements Processor {
 	private static Logger logger = LoggerFactory.getLogger(PatientResponseProcessor.class);
 	
-	@PropertyInject("FHIR_BASE")
-	String fhirBase;
+	//@PropertyInject("FHIR_BASE")
+	String fhirBase = "http://ciaotest1-x26.hscic.nhs.uk/fhir/";
 
 	public void process(Exchange exchange) throws Exception {
 		

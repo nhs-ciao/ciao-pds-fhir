@@ -65,22 +65,50 @@ public class FHIRRoutes extends CIPRoutes {
     		.choice()
             	.when(header(Exchange.HTTP_METHOD).isEqualTo("GET"))
             		.log("GET Request")
-					.beanRef("payloadBuilder",
-			    				"buildSimpleTrace(${header.family}),"
-					    				+ "${header.gender}),"
-					    				+ "${header.birthdate})")
-            		.to("direct:spineSender")
+            		
+            		// The format that the requester wants can be specified in the
+            		// request, so we can store that as a property in the Exchange
+            		// for use later. This can be specified in the Accept header or
+            		// using a _format query parameter
+            		.choice()
+	            		.when(header("_format").isNotNull())
+	            			.setProperty("fhirResourceFormat").simple("${header._format}")
+	            			.to("direct:generateSpineRequest")
+	            		.when(header("Accept").contains("fhir"))
+	            			.setProperty("fhirResourceFormat").simple("${header.Accept}")
+	            			.to("direct:generateSpineRequest")
             	.otherwise()
-            		.log("OTHER Request")
+            		// We don't support POST requests, so return a suitable error.
             		.beanRef("patientPostProcessor");
-
+    	
+    	// Generate Spine Request
+    	from("direct:generateSpineRequest").routeId("fhir-patient-requestGenerator")
+    		// Pass the query parameters into a java class to
+    		// create the SOAP request content
+    		.beanRef("payloadBuilder",
+	    				"buildSimpleTrace(${header.family},"
+			    				+ "${header.gender},"
+			    				+ "${header.birthdate},"
+			    				+ "{{ASID}},"
+			    				+ "{{PDSASID}},"
+			    				+ "{{PDSURL}},"
+			    				+ "{{SOAPFromAddress}})")
+    		.to("direct:spineSender");
+    		
     	// Send to Spine
     	from("direct:spineSender").routeId("fhir-patient-spineSender")
+    		// First, log the outbound message
     		.wireTap("jms:ciao-spineRequestAudit")
+    		// Remove any request headers that came in from the client's request
+    		.removeHeaders("*")
+    		// Set the SOAPAction header and specfy the URL for the Spine request
     		.setHeader("SOAPaction", simple("urn:nhs:names:services:pdsquery/QUPA_IN000005UK01"))
     		.setHeader(Exchange.HTTP_URI, simple("{{PDSURL}}"))
+    		// Send the message, using the configured security context (to
+    		// handle the TLS MA connection
     		.to("http4://dummyurl?throwExceptionOnFailure=false"
     						+ "&sslContextParametersRef=spineSSLContextParameters")
+    		// Log the message that comes back from Spine
     		.wireTap("jms:ciao-spineResponseAudit")
     		.to("direct:responseProcessor");
     	
@@ -89,13 +117,16 @@ public class FHIRRoutes extends CIPRoutes {
     		.streamCaching()
     		// Route based on type of response from Spine
     		.choice()
+    			// A response code that doesn't start with 2 can be treated as an error
     			.when(header(Exchange.HTTP_RESPONSE_CODE).not().startsWith("2")).beanRef("HTTPErrorProcessor")
     		.otherwise()
-    			.convertBodyTo(org.w3c.dom.Document.class)
+    			/*.convertBodyTo(org.w3c.dom.Document.class)
     			.choice()
 	    			.when().xpath("/SOAP-ENV:Envelope/SOAP-ENV:Body/hl7:traceQueryResponse/hl7:QUQI_IN010000UK14", ns).beanRef("QueryActFailedProcessor")
 	    			.when().xpath("/SOAP-ENV:Envelope/SOAP-ENV:Body/SOAP-ENV:Fault", ns).beanRef("SOAPFaultProcessor")
-	    			.otherwise().beanRef("patientResponseProcessor");
+	    			.otherwise()*/
+    					.log("FHIR Format requested was: ${property.fhirResourceFormat}")
+    					.beanRef("patientResponseProcessor");
     	
     	// Log spine messages
     	from("jms:ciao-spineRequestAudit")

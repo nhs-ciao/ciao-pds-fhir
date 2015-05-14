@@ -96,11 +96,13 @@ public class PatientResource {
 		// PracticeCode
 		
 		// Now put our patient resource into a bundle
-		List<Patient> patientList = new ArrayList<Patient>();
-		patientList.add(patientResource);
-		AtomFeed feed = PatientResultBundle.buildBundle(patientList, fhirBase);
+		//List<Patient> patientList = new ArrayList<Patient>();
+		//patientList.add(patientResource);
+		//AtomFeed feed = PatientResultBundle.buildBundle(patientList, fhirBase);
 		
-		return ResourceSerialiser.serialise(feed, format);
+		
+		//return ResourceSerialiser.serialise(feed, format);
+		return ResourceSerialiser.serialise(patientResource, format);
 		
 		/*
 		If we were using DSTU2 the code would be different - e.g.:

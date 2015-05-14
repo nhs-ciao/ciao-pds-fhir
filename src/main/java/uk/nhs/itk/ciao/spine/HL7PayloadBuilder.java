@@ -15,15 +15,6 @@ import uk.nhs.itk.ciao.configuration.CIAOConfig;
 
 public class HL7PayloadBuilder {
 	
-	@PropertyInject("ASID")
-	private String ciaoASID;
-	@PropertyInject("PDSASID")
-	private String pdsASID;
-	@PropertyInject("PDSURL")
-	private String pdsURL;
-	@PropertyInject("SOAPFromAddress")
-	private String fromAddress;
-	
 	/**
 	 * This method will validate the request parameters provided
 	 * Get by NHS Number:
@@ -40,7 +31,9 @@ public class HL7PayloadBuilder {
 		return true;
 	}
 	
-	public String buildSimpleTrace(String surname, String gender, String dateOfBirth) throws Exception {
+	public String buildSimpleTrace(String surname, String gender, String dateOfBirth,
+									String ciaoASID, String pdsASID, String pdsURL,
+									String fromAddress) throws Exception {
 		
 		System.out.println(ciaoASID);
 		
