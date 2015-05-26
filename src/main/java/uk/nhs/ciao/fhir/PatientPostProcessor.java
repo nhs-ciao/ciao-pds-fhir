@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir;
+package uk.nhs.ciao.fhir;
 
 public class PatientPostProcessor {
 	public String process() throws Exception {

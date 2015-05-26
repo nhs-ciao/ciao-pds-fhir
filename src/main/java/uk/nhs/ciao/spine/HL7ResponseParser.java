@@ -1,5 +1,6 @@
-package uk.nhs.itk.ciao.spine;
+package uk.nhs.ciao.spine;
 
+import uk.nhs.ciao.model.Patient;
 import uk.nhs.interoperability.payloads.Payload;
 import uk.nhs.interoperability.payloads.commontypes.Address;
 import uk.nhs.interoperability.payloads.commontypes.PersonName;
@@ -13,7 +14,6 @@ import uk.nhs.interoperability.payloads.vocabularies.generated.Sex;
 import uk.nhs.interoperability.payloads.vocabularies.internal.AddressType;
 import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
 import uk.nhs.interoperability.payloads.vocabularies.internal.TelecomUseType;
-import uk.nhs.itk.ciao.model.Patient;
 
 public class HL7ResponseParser {
 	public static Patient parseSpineResponse(String response) {

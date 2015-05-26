@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir.resources;
+package uk.nhs.ciao.fhir.resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +15,15 @@ import org.hl7.fhir.instance.model.HumanName;
 import org.hl7.fhir.instance.model.Identifier;
 import org.hl7.fhir.instance.model.Patient;
 
+import uk.nhs.ciao.util.V3FHIRTypeMappers;
 import uk.nhs.interoperability.payloads.commontypes.Address;
 import uk.nhs.interoperability.payloads.commontypes.PersonName;
 import uk.nhs.interoperability.payloads.commontypes.Telecom;
 import uk.nhs.interoperability.payloads.helpers.HumanReadableFormatter;
-import uk.nhs.itk.ciao.util.V3FHIRTypeMappers;
 
 public class PatientResource {
 	
-	public static String buildPatientResource(uk.nhs.itk.ciao.model.Patient spinePatient, ResourceFormat format, String fhirBase) {
+	public static String buildPatientResource(uk.nhs.ciao.model.Patient spinePatient, ResourceFormat format, String fhirBase) {
 		Patient patientResource = new Patient();
 		
 		// Name

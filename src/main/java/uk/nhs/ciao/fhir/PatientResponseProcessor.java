@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir;
+package uk.nhs.ciao.fhir;
 
 import static org.hl7.fhir.instance.client.ResourceFormat.RESOURCE_JSON;
 
@@ -10,11 +10,11 @@ import org.hl7.fhir.instance.client.ResourceFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.nhs.itk.ciao.configuration.CIAOConfig;
-import uk.nhs.itk.ciao.fhir.resources.MimeTypes;
-import uk.nhs.itk.ciao.fhir.resources.PatientResource;
-import uk.nhs.itk.ciao.model.Patient;
-import uk.nhs.itk.ciao.spine.HL7ResponseParser;
+import uk.nhs.ciao.configuration.CIAOConfig;
+import uk.nhs.ciao.fhir.resources.MimeTypes;
+import uk.nhs.ciao.fhir.resources.PatientResource;
+import uk.nhs.ciao.model.Patient;
+import uk.nhs.ciao.spine.HL7ResponseParser;
 
 public class PatientResponseProcessor implements Processor {
 	private static Logger logger = LoggerFactory.getLogger(PatientResponseProcessor.class);

@@ -45,16 +45,16 @@
 
   <!-- This will add our java beans to the camel registry so they can be
        accessed from our routes -->
-  <bean id="patientGetProcessor" class="uk.nhs.itk.ciao.fhir.PatientGetProcessor"/>
-  <bean id="patientPostProcessor" class="uk.nhs.itk.ciao.fhir.PatientPostProcessor"/>
-  <bean id="patientResponseProcessor" class="uk.nhs.itk.ciao.fhir.PatientResponseProcessor"/>
-  <bean id="conformanceProcessor" class="uk.nhs.itk.ciao.fhir.ConformanceProcessor"/>
+  <bean id="patientGetProcessor" class="uk.nhs.ciao.fhir.PatientGetProcessor"/>
+  <bean id="patientPostProcessor" class="uk.nhs.ciao.fhir.PatientPostProcessor"/>
+  <bean id="patientResponseProcessor" class="uk.nhs.ciao.fhir.PatientResponseProcessor"/>
+  <bean id="conformanceProcessor" class="uk.nhs.ciao.fhir.ConformanceProcessor"/>
   
   <camel:camelContext id="ciao-fhir" xmlns="http://camel.apache.org/schema/spring">
     <!-- Tell Camel where our Java DSL routes can be found. It will look
          for any classes in this package that extend the RouteBuilder class
     -->
-    <package>uk.nhs.itk.ciao.fhir</package>
+    <package>uk.nhs.ciao.fhir</package>
   </camel:camelContext>
 
 </beans>

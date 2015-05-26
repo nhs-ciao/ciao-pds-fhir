@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir.resources;
+package uk.nhs.ciao.fhir.resources;
 
 import static org.hl7.fhir.instance.client.ResourceFormat.RESOURCE_XML;
 

@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.nhs.itk.ciao.fhir;
+package uk.nhs.ciao.fhir;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.xml.Namespaces;
 
-import uk.nhs.itk.ciao.CIPRoutes;
+import uk.nhs.ciao.CIPRoutes;
 
 /**
  * Routes for our FHIR endpoint

@@ -1,7 +1,8 @@
-package uk.nhs.itk.ciao.spine;
+package uk.nhs.ciao.spine;
 
 import org.apache.camel.PropertyInject;
 
+import uk.nhs.ciao.configuration.CIAOConfig;
 import uk.nhs.interoperability.payloads.DateValue;
 import uk.nhs.interoperability.payloads.commontypes.SMSPPersonName;
 import uk.nhs.interoperability.payloads.spine.SpineSOAP;
@@ -11,7 +12,6 @@ import uk.nhs.interoperability.payloads.vocabularies.generated.HL7StandardVersio
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingID;
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingMode;
 import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
-import uk.nhs.itk.ciao.configuration.CIAOConfig;
 
 public class HL7PayloadBuilder {
 	

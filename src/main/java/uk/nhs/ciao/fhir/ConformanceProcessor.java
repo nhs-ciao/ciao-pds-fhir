@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir;
+package uk.nhs.ciao.fhir;
 import java.io.File;
 
 import org.apache.camel.Body;
@@ -10,13 +10,13 @@ import org.hl7.fhir.instance.client.ResourceFormat;
 
 import static org.hl7.fhir.instance.client.ResourceFormat.RESOURCE_XML;
 import static org.hl7.fhir.instance.client.ResourceFormat.RESOURCE_JSON;
+import uk.nhs.ciao.fhir.resources.ConformanceResource;
+import uk.nhs.ciao.fhir.resources.MimeTypes;
+import uk.nhs.ciao.fhir.resources.PatientResource;
+import uk.nhs.ciao.model.Patient;
+import uk.nhs.ciao.spine.HL7PayloadBuilder;
+import uk.nhs.ciao.spine.HL7ResponseParser;
 import uk.nhs.interoperability.payloads.util.FileLoader;
-import uk.nhs.itk.ciao.fhir.resources.ConformanceResource;
-import uk.nhs.itk.ciao.fhir.resources.MimeTypes;
-import uk.nhs.itk.ciao.fhir.resources.PatientResource;
-import uk.nhs.itk.ciao.model.Patient;
-import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
-import uk.nhs.itk.ciao.spine.HL7ResponseParser;
 
 /**
  * There are two methods to query for FHIR conformance:

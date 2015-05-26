@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.util;
+package uk.nhs.ciao.util;
 
 import org.hl7.fhir.instance.model.Contact;
 import org.hl7.fhir.instance.model.Contact.ContactSystem;

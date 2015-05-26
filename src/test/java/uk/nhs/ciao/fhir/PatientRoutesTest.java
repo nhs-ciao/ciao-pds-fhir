@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir;
+package uk.nhs.ciao.fhir;
 
 import java.util.concurrent.TimeUnit;
 

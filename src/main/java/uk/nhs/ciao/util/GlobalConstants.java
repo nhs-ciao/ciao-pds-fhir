@@ -11,7 +11,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package uk.nhs.itk.ciao.util;
+package uk.nhs.ciao.util;
 
 public interface GlobalConstants {
 	public static final String CONFIG_FILE = "ciao-pds-fhir.properties";

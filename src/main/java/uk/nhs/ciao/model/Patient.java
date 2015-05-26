@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.model;
+package uk.nhs.ciao.model;
 
 import java.util.ArrayList;
 

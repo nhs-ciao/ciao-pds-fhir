@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir.resources;
+package uk.nhs.ciao.fhir.resources;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

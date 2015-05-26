@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir.resources;
+package uk.nhs.ciao.fhir.resources;
 
 import java.util.Date;
 import java.util.List;

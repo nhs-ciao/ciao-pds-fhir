@@ -1,4 +1,4 @@
-package uk.nhs.itk.ciao.fhir;
+package uk.nhs.ciao.fhir;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.util.jndi.JndiContext;
@@ -9,9 +9,9 @@ import org.apache.camel.util.jsse.TrustManagersParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.nhs.itk.ciao.properties.CiaoPropertyResolver;
-import uk.nhs.itk.ciao.spine.HL7PayloadBuilder;
-import uk.nhs.itk.ciao.util.GlobalConstants;
+import uk.nhs.ciao.properties.CiaoPropertyResolver;
+import uk.nhs.ciao.spine.HL7PayloadBuilder;
+import uk.nhs.ciao.util.GlobalConstants;
 
 /**
  * To test the CIP pointing at TKW use one of the following:
@@ -37,7 +37,7 @@ import uk.nhs.itk.ciao.util.GlobalConstants;
  * @author Adam Hatherly
  *
  */
-public class RunCIP extends uk.nhs.itk.ciao.RunCIP implements GlobalConstants {
+public class RunCIP extends uk.nhs.ciao.RunCIP implements GlobalConstants {
 	
 	private static Logger logger = LoggerFactory.getLogger(RunCIP.class);
 	
