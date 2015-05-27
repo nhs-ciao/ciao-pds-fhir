@@ -8,8 +8,8 @@ import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.env.PropertiesPropertySource;
 
 import uk.nhs.ciao.camel.CamelApplication;
+import uk.nhs.ciao.camel.CamelApplicationRunner;
 import uk.nhs.ciao.exceptions.CIAOConfigurationException;
-
 import static uk.nhs.ciao.util.GlobalConstants.*;
 
 /**
@@ -45,7 +45,8 @@ public class RunCIP extends CamelApplication {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		new RunCIP(args).run();
+		final CamelApplication application = new RunCIP(args);
+		CamelApplicationRunner.runApplication(application);
 	}
 	
 	public RunCIP(final String[] args) throws CIAOConfigurationException {
