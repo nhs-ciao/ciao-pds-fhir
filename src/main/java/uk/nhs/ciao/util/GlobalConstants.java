@@ -13,6 +13,10 @@
 */
 package uk.nhs.ciao.util;
 
-public interface GlobalConstants {
+public final class GlobalConstants {
+	private GlobalConstants() {
+		// Suppress default constructor
+	}
+	
 	public static final String CONFIG_FILE = "ciao-pds-fhir.properties";
 }

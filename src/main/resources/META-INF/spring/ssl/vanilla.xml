@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.15.2.xsd">
+	
+	<bean id="spineSSLContextParameters" class="org.apache.camel.util.jsse.SSLContextParameters">
+		<!-- TLS is disabled - an empty context is used -->
+	</bean>
+	
+</beans>

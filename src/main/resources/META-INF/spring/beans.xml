@@ -27,29 +27,28 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.springframework.org/schema/osgi-compendium http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium.xsd">
 
-  <!-- Configure our JMS provider - in this case ActiveMQ. In a 
-       production environment you will want to change this from
-       the default username and password to something else. The
-       login and password for activemq in servicemix can be found
-       in {servicmixpath}/etc/users.properties
-  -->
-  <bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
-    <property name="connectionFactory">
-      <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="tcp://localhost:61616" />        
-		<property name="userName" value="smx" />
-		<property name="password" value="smx" />
-      </bean>
-    </property>
+  <!-- Make config properties available to both spring and camel -->	
+  <bean id="bridgePropertyPlaceholder" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer">
+    <property name="properties" ref="ciaoProperties" />
+    <!-- Be tolerant of clashes between missing spring placeholders and Camel simple expressions -->
+    <property name="ignoreUnresolvablePlaceholders" value="true" />
   </bean>
+
+  <!-- Select 'dynamic' spring imports - determined via CIAO properties -->
+  <import resource="messaging/${messagingConfig}.xml"/>
+  <import resource="ssl/${sslConfig}.xml"/>
 
   <!-- This will add our java beans to the camel registry so they can be
        accessed from our routes -->
-  <bean id="patientGetProcessor" class="uk.nhs.ciao.fhir.PatientGetProcessor"/>
+  <bean id="payloadBuilder" class="uk.nhs.ciao.spine.HL7PayloadBuilder"/>
   <bean id="patientPostProcessor" class="uk.nhs.ciao.fhir.PatientPostProcessor"/>
   <bean id="patientResponseProcessor" class="uk.nhs.ciao.fhir.PatientResponseProcessor"/>
   <bean id="conformanceProcessor" class="uk.nhs.ciao.fhir.ConformanceProcessor"/>
   
+  <bean id="QueryActFailedProcessor" class="uk.nhs.ciao.fhir.QueryActFailedProcessor"/>
+  <bean id="SOAPFaultProcessor" class="uk.nhs.ciao.fhir.SOAPFaultProcessor"/>
+  <bean id="HTTPErrorProcessor" class="uk.nhs.ciao.fhir.HTTPErrorProcessor"/>
+
   <camel:camelContext id="ciao-fhir" xmlns="http://camel.apache.org/schema/spring">
     <!-- Tell Camel where our Java DSL routes can be found. It will look
          for any classes in this package that extend the RouteBuilder class

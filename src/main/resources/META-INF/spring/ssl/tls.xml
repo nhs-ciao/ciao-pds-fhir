@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.15.2.xsd">
+	
+	<bean id="spineSSLContextParameters" class="org.apache.camel.util.jsse.SSLContextParameters">
+		<!-- Configure a key manager -->
+		<property name="keyManagers">
+			<bean class="org.apache.camel.util.jsse.KeyManagersParameters">
+				<property name="keyStore">
+					<bean class="org.apache.camel.util.jsse.KeyStoreParameters">
+						<property name="resource" value="${KEY_STORE}" />
+						<property name="password" value="${KEY_STORE_PW}" />
+					</bean>
+				</property>
+				<property name="keyPassword" value="${KEY_PASSWORD}" />
+			</bean>
+		</property>
+		
+		<!-- Configure a trust manager -->
+		<property name="trustManagers">
+			<bean class="org.apache.camel.util.jsse.TrustManagersParameters">
+				<property name="keyStore">
+					<bean class="org.apache.camel.util.jsse.KeyStoreParameters">
+						<property name="resource" value="${TRUST_STORE}" />
+						<property name="password" value="${TRUST_STORE_PW}" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+</beans>
