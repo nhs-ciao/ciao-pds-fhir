@@ -49,7 +49,10 @@
   <bean id="SOAPFaultProcessor" class="uk.nhs.ciao.fhir.SOAPFaultProcessor"/>
   <bean id="HTTPErrorProcessor" class="uk.nhs.ciao.fhir.HTTPErrorProcessor"/>
 
-  <camel:camelContext id="ciao-fhir" xmlns="http://camel.apache.org/schema/spring">
+  <camel:camelContext id="ciao-fhir" xmlns="http://camel.apache.org/schema/spring" trace="true" streamCache="true">
+		<properties>
+			<property key="CamelLogDebugStreams" value="true" />
+		</properties>
     <!-- Tell Camel where our Java DSL routes can be found. It will look
          for any classes in this package that extend the RouteBuilder class
     -->
