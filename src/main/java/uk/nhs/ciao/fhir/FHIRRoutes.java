@@ -77,8 +77,13 @@ public class FHIRRoutes extends CIPRoutes {
 	            		.when(header("Accept").contains("fhir"))
 	            			.setProperty("fhirResourceFormat").simple("${header.Accept}")
 	            			.to("direct:generateSpineRequest")
+	            		.otherwise()
+	            			.to("direct:generateSpineRequest")
+	            		.endChoice()
             	.otherwise()
             		// We don't support POST requests, so return a suitable error.
+            		
+            		.log("POST Request")
             		.beanRef("patientPostProcessor");
     	
     	// Generate Spine Request
@@ -106,8 +111,8 @@ public class FHIRRoutes extends CIPRoutes {
     		.setHeader(Exchange.HTTP_URI, simple("{{PDSURL}}"))
     		// Send the message, using the configured security context (to
     		// handle the TLS MA connection
-    		.to("http4://dummyurl?throwExceptionOnFailure=false"
-    						+ "&sslContextParametersRef=spineSSLContextParameters")
+    		.to("http4://dummyurl"
+    						+ "?sslContextParametersRef=spineSSLContextParameters")
     		// Log the message that comes back from Spine
     		.wireTap("jms:ciao-spineResponseAudit")
     		.to("direct:responseProcessor");

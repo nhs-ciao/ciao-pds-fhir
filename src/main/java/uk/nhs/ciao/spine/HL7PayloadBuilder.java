@@ -1,5 +1,7 @@
 package uk.nhs.ciao.spine;
 
+import java.util.Date;
+
 import org.apache.camel.PropertyInject;
 
 import uk.nhs.ciao.configuration.CIAOConfig;
@@ -11,6 +13,7 @@ import uk.nhs.interoperability.payloads.util.CDAUUID;
 import uk.nhs.interoperability.payloads.vocabularies.generated.HL7StandardVersionCode;
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingID;
 import uk.nhs.interoperability.payloads.vocabularies.generated.ProcessingMode;
+import uk.nhs.interoperability.payloads.vocabularies.internal.DatePrecision;
 import uk.nhs.interoperability.payloads.vocabularies.internal.PersonNameType;
 
 public class HL7PayloadBuilder {
@@ -51,7 +54,7 @@ public class HL7PayloadBuilder {
 		// Transmission Wrapper Fields (Send Message Payload)
 		//body.setTransmissionID(messageUUID);
 		body.setTransmissionID(CDAUUID.generateUUIDString());
-		body.setTransmissionCreationTime(new DateValue("20150118100231"));
+		body.setTransmissionCreationTime(new DateValue(new Date(), DatePrecision.Seconds));
 		body.setTransmissionHL7VersionCode(HL7StandardVersionCode._V3NPfIT30);
 		body.setTransmissionInteractionID("QUPA_IN000005UK01");
 		body.setTransmissionProcessingCode(ProcessingID._Production);
