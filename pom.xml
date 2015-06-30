@@ -15,7 +15,7 @@
 	
 	<dependencies>
 		<dependency>
-		  <groupId>uk.nhs.interoperability</groupId>
+		  <groupId>uk.nhs.ciao</groupId>
 		  <artifactId>ciao-core</artifactId>
 		  <version>0.0.1-SNAPSHOT</version>
 		</dependency>
