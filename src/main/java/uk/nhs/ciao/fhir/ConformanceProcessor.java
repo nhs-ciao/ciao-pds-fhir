@@ -14,8 +14,8 @@ import uk.nhs.ciao.fhir.resources.ConformanceResource;
 import uk.nhs.ciao.fhir.resources.MimeTypes;
 import uk.nhs.ciao.fhir.resources.PatientResource;
 import uk.nhs.ciao.model.Patient;
-import uk.nhs.ciao.spine.HL7PayloadBuilder;
-import uk.nhs.ciao.spine.HL7ResponseParser;
+import uk.nhs.ciao.spine.pds.hl7.HL7PayloadBuilder;
+import uk.nhs.ciao.spine.pds.hl7.HL7ResponseParser;
 import uk.nhs.interoperability.payloads.util.FileLoader;
 
 /**

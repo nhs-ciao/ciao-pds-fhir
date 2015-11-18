@@ -14,7 +14,7 @@ import uk.nhs.ciao.configuration.CIAOConfig;
 import uk.nhs.ciao.fhir.resources.MimeTypes;
 import uk.nhs.ciao.fhir.resources.PatientResource;
 import uk.nhs.ciao.model.Patient;
-import uk.nhs.ciao.spine.HL7ResponseParser;
+import uk.nhs.ciao.spine.pds.hl7.HL7ResponseParser;
 
 public class PatientResponseProcessor implements Processor {
 	private static Logger logger = LoggerFactory.getLogger(PatientResponseProcessor.class);

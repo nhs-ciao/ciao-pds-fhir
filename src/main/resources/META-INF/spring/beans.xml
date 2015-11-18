@@ -40,7 +40,7 @@
 
   <!-- This will add our java beans to the camel registry so they can be
        accessed from our routes -->
-  <bean id="payloadBuilder" class="uk.nhs.ciao.spine.HL7PayloadBuilder"/>
+  <bean id="payloadBuilder" class="uk.nhs.ciao.spine.psd.hl7.HL7PayloadBuilder"/>
   <bean id="patientPostProcessor" class="uk.nhs.ciao.fhir.PatientPostProcessor"/>
   <bean id="patientResponseProcessor" class="uk.nhs.ciao.fhir.PatientResponseProcessor"/>
   <bean id="conformanceProcessor" class="uk.nhs.ciao.fhir.ConformanceProcessor"/>
